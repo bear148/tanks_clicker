@@ -14,6 +14,15 @@ body {
     margin-left: 25px;
 }
 
-div:first-child {
+div #credit_c, div > h1:first-of-type {
+    color: silver;
+}
+
+div #gold_c, div > h1:last-of-type {
     color: gold;
+}
+
+#count {
+    color: gold;
+    padding-left: 55px;
 }
