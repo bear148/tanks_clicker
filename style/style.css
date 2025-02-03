@@ -18,24 +18,21 @@ body {
 #stats {
     display: flex;
     flex-flow: column nowrap;
-    width: 20%;
+    width: fit-content;
+    font-size: 10px;
 }
 
-div #credit_c, div > h1:first-of-type {
+div #credit-c, div > h1:first-of-type {
     color: silver;
 }
 
-div #gold_c, div > h1:last-of-type {
+div #gold-c, div > h1:last-of-type {
     color: gold;
 }
 
 #count {
     color: gold;
     padding-left: 55px;
-}
-
-#middle {
-    align-self: center;
 }
 
 #tank {
@@ -63,4 +60,27 @@ div #gold_c, div > h1:last-of-type {
 
 .na {
     display: none;
+}
+
+#gold-boosters {
+    display: flex;
+    flex-flow: row wrap;
+    width: 500px;
+}
+
+.gold-boost {
+    background-image: url(/assets/items/gold_booster.webp);
+    background-size: contain;
+    width: 32px;
+    height: 32px;
+}
+
+.gold-pop-up {
+    color: gold;
+}
+
+#buyGold-Booster {
+    background-color: red;
+    width: fit-content;
+    pointer-events: none;
 }

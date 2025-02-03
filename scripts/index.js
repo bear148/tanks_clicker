@@ -8,11 +8,16 @@ going to expand upon it in my own tank themed game.
 - Michael S. Jan 22. 2024
 */
 let countElement = document.getElementById("count");
-let gold = 0;
+
 let credits = 0;
 let creditsDisplay = 0;
-let gold_rate = 1;
 let credit_rate = 10;
+
+let gold = 0;
+let gold_rate = 1;
+let gold_unlocked = false;
+let goldDisplay = 0;
+
 let T = 0;
 
 let gps = 0;
@@ -24,23 +29,34 @@ let items = [];
 
 let crew = 0;
 
+let gold_boosters = 1;
+
 let Load = function () {
     Main();
 }
 
-let item = function (name, description, img, pirce, func) {
+let item = function (name, description, img, pirce, func, curr = 1) {
     this.name = name;
     this.desc = description;
     this.img = img;
     this.price = pirce;
     this.func = func;
+    this.c = curr;
     items[name] = this;
 
     this.Buy = function () {
-        if (credits >= this.price) {
-            credits -= this.price;
-            this.price = Math.ceil(this.price * 1.1);
-            this.func(1);
+        if (this.c == 1) {
+            if (credits >= this.price) {
+                credits -= this.price;
+                this.price = Math.ceil(this.price * 1.1);
+                this.func(1);
+            }
+        } else if (this.c == 2) {
+            if (gold >= this.price) {
+                gold -= this.price;
+                this.price = Math.ceil(this.price * 1.3);
+                this.func(1);
+            }
         }
     }
 }
@@ -60,6 +76,15 @@ new item("Crew", "A crew member to help skillfully guide your tank.", null, 2000
     l('crew-members').innerHTML = str;
 })
 
+new item("Gold-Booster", "An item to boost your gold production.", null, 500, function (buy) {
+    if (buy) gold_boosters++;
+    let str = '';
+    for (let i = 0; i < gold_boosters; i++) {
+        str += '<div class="gold-boost"></div>';
+    }
+    l('gold-boosters').innerHTML = str;
+}, 2);
+
 let PopUp = function (el, str) {
     this.el = el;
     this.str = str;
@@ -76,7 +101,6 @@ function l(str) {
 function tankClick() {
     credits += credit_rate;
     if (popUps.length < 260 && popUpsEnabled) new PopUp("tank", "+" + credit_rate);
-    console.log(credits);
 }
 
 function addCredits(howmany, el) {
@@ -84,8 +108,16 @@ function addCredits(howmany, el) {
     if (el && popUps.length < 250 && popUpsEnabled) new PopUp(el, '+' + howmany);
 }
 
+function addGold(howmany, el) {
+    gold += howmany;
+}
+
 let Main = function () {
     let str = "";
+
+    if (credits >= 50000) {
+        gold_unlocked = true;
+    }
 
     for (let i in popUps) {
         let rect = l(popUps[i].el).getBoundingClientRect();
@@ -113,21 +145,26 @@ let Main = function () {
     l("popups").innerHTML = str;
 
     for (let i in items) {
-        if (credits >= items[i].price) l('buy' + items[i].name).className = '';
+        if (credits >= items[i].price && items[i].c == 1) l('buy' + items[i].name).className = '';
+        else if (gold >= items[i].price && items[i].c == 2) l('buy' + items[i].name).className = '';
         else l('buy' + items[i].name).className = 'na';
     }
 
     if (crew && T % Math.ceil(150 / crew) == 0) addCredits(50, 'crew-members');
+    if (gold_unlocked && T % Math.ceil(150 / gold_boosters) == 0) addGold(10, 'gold');
 
     let cps = 0;
     cps += crew * 10 / 5;
 
     // let floater = Math.round(cps * 10 - Math.floor(cps) * 10);
     // cps = (cps) + (floater ? ('.' + floater) : '');
-    // l('credit_rate').innerHTML = 'credits/second : ' + cps;
+    // l('credit-rate').innerHTML = 'credits/second : ' + cps;
 
     creditsDisplay += (credits - creditsDisplay) * 0.5;
-    l('credit_c').innerHTML = Math.round(creditsDisplay);
+    l('credit-c').innerHTML = Math.round(creditsDisplay);
+
+    goldDisplay += (gold - goldDisplay) * 0.5;
+    l('gold-c').innerHTML = Math.round(goldDisplay);
 
     T++;
     setTimeout(Main, 1000 / 30);
