@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script src="/scripts/index.js" defer></script>
-        <link rel="stylesheet" href="/style/style.css">
+        <link rel="stylesheet" href="/style/style.css" />
     </head>
     <body>
-        <div id="main">
+        <div id="stats">
             <h1>Credits: <span id="credit_c">0</span></h1>
-            <h1>Gold: <span id="gold_c">0</span><span id="count" style="display: none;">+1</span></h1>
+            <!-- <h3>Cps: <span id="credit_rate">0</span></h3> -->
+            <h1>Gold: <span id="gold_c">0</span></h1>
         </div>
+        <div id="middle">
+            <div id="tank" onmousedown="tankClick()"></div>
+            <div id="crew-members"></div>
+        </div>
+        <div id="right">
+            <div id="store">
+                <div id="buyCrew" class="" onclick="Buy('Crew')" style="background-color:red;"></div>
+            </div>
+        </div>
+        <div id="popups"></div>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
-                init();
+                Load();
             });
         </script>
     </body>

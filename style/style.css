@@ -1,17 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
+body,
+#middle {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
 body {
     background: rgb(0,0,0);
-    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(20,20,20,1) 6%, rgba(61,61,61,1) 17%, rgba(91,91,91,1) 45%, rgba(95,95,95,1) 100%);
 }
 
 * {
-    font-family: "Noto Sans", serif;
-    font-weight: bold;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: white;
 }
 
-#main {
-    margin-left: 25px;
+#stats {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 20%;
 }
 
 div #credit_c, div > h1:first-of-type {
@@ -25,4 +32,35 @@ div #gold_c, div > h1:last-of-type {
 #count {
     color: gold;
     padding-left: 55px;
+}
+
+#middle {
+    align-self: center;
+}
+
+#tank {
+    width: 100px;
+    height: 100px;
+    align-self: center;
+    background-image: url('/assets/tanks/ms1.png');
+}
+
+#popups {
+    pointer-events: none;
+}
+
+#store > div {
+    width: 128px;
+    height: 128px;
+    cursor: pointer;
+}
+
+.crew {
+    background-image: url('/assets/items/brothers.png');
+    width: 52px;
+    height: 52px;
+}
+
+.na {
+    display: none;
 }
