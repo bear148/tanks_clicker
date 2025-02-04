@@ -4,8 +4,10 @@
 	"editor.formatOnSave": true,
 	"editor.formatOnPaste": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.fontSize": 14,
 	"[javascript]": {
 		"editor.defaultFormatter": "nesterenok.js-beautify-extentions"
-	}
+	},
+	"editor.fontFamily": "JetBrains Mono",
+	"editor.fontSize": 13,
+  	"editor.fontLigatures": true
 }

@@ -20,18 +20,14 @@ let goldDisplay = 0;
 
 let T = 0;
 
-let gps = 0;
-
 let popUps = [];
 let popUpsEnabled = true;
-
-let items = [];
 
 let crew = 0;
 
 let gold_boosters = 1;
 
-let Load = function () {
+window.onload = function () {
     Main();
 }
 
@@ -41,16 +37,18 @@ let Load = function () {
         Item manager will manage item classes and make this file smaller. The initialization will be handled in the Load function defined above.
 */
 
-let item = function (name, description, img, pirce, func, curr = 1) {
+let items = [];
+
+let Item = function(name, description, img, price, func, curr) {
     this.name = name;
     this.desc = description;
     this.img = img;
-    this.price = pirce;
+    this.price = price;
     this.func = func;
     this.c = curr;
     items[name] = this;
 
-    this.Buy = function () {
+    this.Buy = function() {
         if (this.c == 1) {
             if (credits >= this.price) {
                 credits -= this.price;
@@ -71,7 +69,7 @@ let Buy = function (i) {
     items[i].Buy();
 }
 
-new item("Crew", "A crew member to help skillfully guide your tank.", null, 2000, function (buy) {
+new Item("Crew", "A crew member to help skillfully guide your tank.", null, 2000, function (buy) {
     if (buy) crew++;
     let str = '';
     for (let i = 0; i < crew; i++) {
@@ -82,7 +80,7 @@ new item("Crew", "A crew member to help skillfully guide your tank.", null, 2000
     l('crew-members').innerHTML = str;
 })
 
-new item("Gold-Booster", "An item to boost your gold production.", null, 500, function (buy) {
+new Item("Gold-Booster", "An item to boost your gold production.", null, 500, function (buy) {
     if (buy) gold_boosters++;
     let str = '';
     for (let i = 0; i < gold_boosters; i++) {
@@ -175,3 +173,5 @@ let Main = function () {
     T++;
     setTimeout(Main, 1000 / 30);
 }
+
+document.getElementById("tank").addEventListener("onmousedown", tankClick);
