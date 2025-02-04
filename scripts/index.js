@@ -35,6 +35,12 @@ let Load = function () {
     Main();
 }
 
+/*
+    To-do:
+    [ ] Move this item variable into its own file and make it a class called ItemManager.
+        Item manager will manage item classes and make this file smaller. The initialization will be handled in the Load function defined above.
+*/
+
 let item = function (name, description, img, pirce, func, curr = 1) {
     this.name = name;
     this.desc = description;
