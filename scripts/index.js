@@ -39,7 +39,7 @@ window.onload = function () {
 
 let items = [];
 
-let Item = function(name, description, img, price, func, curr) {
+let Item = function(name, description, img, price, func, curr = 1) {
     this.name = name;
     this.desc = description;
     this.img = img;
@@ -66,6 +66,7 @@ let Item = function(name, description, img, price, func, curr) {
 }
 
 let Buy = function (i) {
+    console.log(i);
     items[i].Buy();
 }
 
@@ -75,8 +76,9 @@ new Item("Crew", "A crew member to help skillfully guide your tank.", null, 2000
     for (let i = 0; i < crew; i++) {
         let x = Math.floor(Math.random() * 20 + (i % 10) * 24);
         let y = Math.floor(Math.random() * 20 + Math.floor(i / 10) * 24);
-        str += '<div class="crew" style="left:' + x + 'px;top:' + y + 'px;"></div>';
+        str += '<div class="crew-bia" style="left:' + x + 'px;top:' + y + 'px;"></div>';
     }
+    l('buyCrewCost').innerHTML = `${this.price}`;
     l('crew-members').innerHTML = str;
 })
 
@@ -86,6 +88,7 @@ new Item("Gold-Booster", "An item to boost your gold production.", null, 500, fu
     for (let i = 0; i < gold_boosters; i++) {
         str += '<div class="gold-boost"></div>';
     }
+    l('buyGold-BoosterCost').innerHTML = `${this.price}`;
     l('gold-boosters').innerHTML = str;
 }, 2);
 
@@ -149,9 +152,9 @@ let Main = function () {
     l("popups").innerHTML = str;
 
     for (let i in items) {
-        if (credits >= items[i].price && items[i].c == 1) l('buy' + items[i].name).className = '';
-        else if (gold >= items[i].price && items[i].c == 2) l('buy' + items[i].name).className = '';
-        else l('buy' + items[i].name).className = 'na';
+        if (credits >= items[i].price && items[i].c == 1) l('buy' + items[i].name + 'Cost').className = '';
+        else if (gold >= items[i].price && items[i].c == 2) l('buy' + items[i].name + 'Cost').className = '';
+        else l('buy' + items[i].name + 'Cost').className = 'na';
     }
 
     if (crew && T % Math.ceil(150 / crew) == 0) addCredits(50, 'crew-members');
@@ -173,5 +176,3 @@ let Main = function () {
     T++;
     setTimeout(Main, 1000 / 30);
 }
-
-document.getElementById("tank").addEventListener("onmousedown", tankClick);

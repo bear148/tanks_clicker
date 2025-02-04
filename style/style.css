@@ -1,18 +1,62 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
-body,
-#middle {
+body {
     display: flex;
     flex-flow: row nowrap;
 }
 
 body {
+    height: 100%;
     background: rgb(0,0,0);
 }
 
 * {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: white;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 100;
+}
+
+#store {
+    border: 1px solid white;
+    width: fit-content;
+    height: fit-content;
+}
+
+#tank {
+    padding: 15px;
+    height: 100px;
+    align-self: center;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(35, 35, 35);
+    border: 1px solid maroon;
+}
+
+#middle {
+    border-bottom: 1px solid white;
+}
+
+#tank img:last-of-type {
+    width: 64px;
+}
+
+#tank > h2 {
+    font-size: 16px;
+    pointer-events: none;
+    user-select: none;
 }
 
 #stats {
@@ -35,37 +79,60 @@ div #gold-c, div > h1:last-of-type {
     padding-left: 55px;
 }
 
-#tank {
-    width: 100px;
-    height: 100px;
-    align-self: center;
-    background-image: url('/assets/tanks/ms1.png');
-}
-
 #popups {
     pointer-events: none;
 }
 
 #store > div {
-    width: 128px;
-    height: 128px;
     cursor: pointer;
 }
 
-.crew {
+.crew-bia {
     background-image: url('/assets/items/brothers.png');
-    width: 52px;
-    height: 52px;
+    background-size: contain;
+}
+
+.crew-int {
+    background-image: url('/assets/items/brothers.png');
+    background-size: contain;
+}
+
+.crew-bia,
+.crew-int,
+.crew {
+    width: 26px;
+    height: 26px;
+}
+
+#buyCrew {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/assets/icons/brothers_plus.png');
+    background-size: contain;
+    background-size: 40px;
+    height: 40px;
+}
+
+#buyCrew > p {
+    color: lime;
+    padding-left: 40px;
+}
+
+#crew-members {
+    display: flex;
+    flex-flow: row wrap;
+    width: 400px;
 }
 
 .na {
-    display: none;
+    color: red !important;
 }
 
 #gold-boosters {
     display: flex;
     flex-flow: row wrap;
-    width: 500px;
+    width: 400px;
 }
 
 .gold-boost {
@@ -80,7 +147,28 @@ div #gold-c, div > h1:last-of-type {
 }
 
 #buyGold-Booster {
-    background-color: red;
-    width: fit-content;
-    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(/assets/items/gold_booster.webp);
+    background-size: contain;
+    width: 16px;
+    height: 16px;
+}
+
+#buyGold-Booster > p {
+    color: lime;
+    padding-left: 48px;
+}
+
+#stats {
+    border-right: 1px solid white;
+    margin-right: 15px;
+    height: 100vh;
+}
+
+#right {
+    border-left: 1px solid white;
+    margin-left: 15px;
+    height: 100vh;
 }
