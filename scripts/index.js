@@ -8,6 +8,7 @@ going to expand upon it in my own tank themed game.
 - Michael S. Jan 22. 2024
 */
 let countElement = document.getElementById("count");
+let currentCountry = null;
 
 let credits = 0;
 let creditsDisplay = 0;
@@ -27,8 +28,35 @@ let crew = 0;
 
 let gold_boosters = 1;
 
-window.onload = function () {
+let Country = function(name, img, tank, tankImg) {
+    this.name = name;
+    this.img = img;
+    this.tank = tank;
+    this.tankImg = tankImg;
+}
+
+function select(country) {
+    switch(country) {
+        case "ussr":
+            currentCountry = new Country("USSR", "/assets/flags/ussr.webp", "MS-1", "/assets/tanks/ms1.png");
+            break;
+        case "us":
+            currentCountry = new Country("US", "/assets/flags/us.png", "T1", "/assets/tanks/t1.webp");
+            break;
+        default:
+            break;
+    }
+
+    l('country-select').innerHTML = "";
+
+    Load();
+}
+
+let Load = function () {
     /* TO-DO: Add some sort of starter screen that allows you to pick your country */
+    l('tank').innerHTML = `                <h2 id="tankName">${currentCountry.tank}</h2>
+                <img id="tankIcon" src="${currentCountry.tankImg}" alt="Soviet MS-1 Tank">
+                <img id="tankCountry" src="${currentCountry.img}" alt="Soviet Flag">`
     Main();
 }
 
@@ -61,7 +89,6 @@ let Item = function (name, description, img, price, func, curr = 1) {
 }
 
 let Buy = function (i) {
-    console.log(i);
     items[i].Buy();
 }
 

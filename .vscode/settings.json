@@ -7,7 +7,6 @@
 	"[javascript]": {
 		"editor.defaultFormatter": "nesterenok.js-beautify-extentions"
 	},
-	"editor.fontFamily": "Consolas, 'Courier New', monospace",
 	"editor.fontSize": 15,
   	"editor.fontLigatures": true
 }

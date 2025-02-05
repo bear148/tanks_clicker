@@ -16,6 +16,7 @@ body {
     background-repeat: no-repeat;
     margin: 0;
     padding: 0;
+    user-select: none;
 }
 
 h1,
@@ -49,11 +50,12 @@ h6 {
     border-bottom: 1px solid white;
 }
 
+.selectFlag,
 #tank img:last-of-type {
     width: 64px;
 }
 
-#tank > h2 {
+#tank * {
     font-size: 16px;
     pointer-events: none;
     user-select: none;
