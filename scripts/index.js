@@ -22,7 +22,7 @@ let goldDisplay = 0;
 let T = 0;
 
 let popUps = [];
-let popUpsEnabled = true;
+let popUpsEnabled = false;
 
 let crew = 0;
 
@@ -103,24 +103,16 @@ let Buy = function (i) {
     items[i].Buy();
 }
 
-new Item("Crew", "A crew member to help skillfully guide your tank.", null, 2000, function (buy) {
+new Item("Crew", "A crew member to help skillfully guide your tank.", null, 1000, function (buy) {
     if (buy) crew++;
-    let str = '';
-    for (let i = 0; i < crew; i++) {
-        str += '<img class="crew-bia" src="/assets/items/brothers.png"></img>';
-    }
     l('buyCrewCost').innerHTML = `${this.price}`;
-    l('crew-members').innerHTML = str;
+    l('crew-members').innerHTML += '<img class="crew-bia" src="/assets/items/brothers.png"></img>';
 })
 
-new Item("Gold-Booster", "An item to boost your gold production.", null, 500, function (buy) {
+new Item("Gold-Booster", "An item to boost your gold production.", null, 50, function (buy) {
     if (buy) gold_boosters++;
-    let str = '';
-    for (let i = 0; i < gold_boosters; i++) {
-        str += '<div class="gold-boost"></div>';
-    }
     l('buyGold-BoosterCost').innerHTML = `${this.price}`;
-    l('gold-boosters').innerHTML = str;
+    l('gold-boosters').innerHTML += '<div class="gold-boost"></div>';
 }, 2);
 
 let PopUp = function (el, str) {
