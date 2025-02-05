@@ -7,7 +7,7 @@ body {
 
 body {
     height: 100%;
-    background-image: url(/assets/img/background.png);
+    background-image: url(/assets/img/back2.png);
     background-size: cover;
     background-position: center;
 }
@@ -52,6 +52,13 @@ h6 {
     border-bottom: 1px solid white;
 }
 
+#middle > h1 {
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 100%;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
 .selectFlag,
 #tank img:last-of-type {
     width: 64px;
@@ -63,12 +70,14 @@ h6 {
     user-select: none;
 }
 
-#stats {
+#left {
     display: flex;
     flex-flow: column nowrap;
     width: fit-content;
     font-size: 10px;
     background-color: rgba(0, 0, 0, 0.2);
+    border-right: 1px solid white;
+    height: 100vh;
 }
 
 div #credit-c, div > h1:first-of-type {
@@ -166,14 +175,41 @@ div #gold-c, div > h1:last-of-type {
     padding-left: 48px;
 }
 
-#stats {
-    border-right: 1px solid white;
-    margin-right: 15px;
+#right {
+    border-left: 1px solid white;
     height: 100vh;
 }
 
-#right {
-    border-left: 1px solid white;
-    margin-left: 15px;
-    height: 100vh;
+#tankIcon {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#country-select {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+}
+
+.store-item {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.store-item:hover .crew-tooltip {
+    display: block;
+}
+
+.crew-tooltip {
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.coupon {
+    margin: 100px;
 }

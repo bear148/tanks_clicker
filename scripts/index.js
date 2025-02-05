@@ -28,6 +28,14 @@ let crew = 0;
 
 let gold_boosters = 1;
 
+function l(str) {
+    return document.getElementById(str);
+}
+
+l('popUpsEnabled').addEventListener('change', () => {
+    popUpsEnabled = popUpsEnabled ? false : true;
+})
+
 let Country = function(name, img, tank, tankImg) {
     this.name = name;
     this.img = img;
@@ -54,9 +62,12 @@ function select(country) {
 
 let Load = function () {
     /* TO-DO: Add some sort of starter screen that allows you to pick your country */
-    l('tank').innerHTML = `                <h2 id="tankName">${currentCountry.tank}</h2>
+    l('tank').innerHTML = `
+                <h2 id="tankName">${currentCountry.tank}</h2>
                 <img id="tankIcon" src="${currentCountry.tankImg}" alt="Soviet MS-1 Tank">
-                <img id="tankCountry" src="${currentCountry.img}" alt="Soviet Flag">`
+                <img id="tankCountry" src="${currentCountry.img}" alt="Soviet Flag">
+    `
+    l('middle-title').innerText = "Your Current Tanks";
     Main();
 }
 
@@ -96,9 +107,7 @@ new Item("Crew", "A crew member to help skillfully guide your tank.", null, 2000
     if (buy) crew++;
     let str = '';
     for (let i = 0; i < crew; i++) {
-        let x = Math.floor(Math.random() * 20 + (i % 10) * 24);
-        let y = Math.floor(Math.random() * 20 + Math.floor(i / 10) * 24);
-        str += '<div class="crew-bia" style="left:' + x + 'px;top:' + y + 'px;"></div>';
+        str += '<img class="crew-bia" src="/assets/items/brothers.png"></img>';
     }
     l('buyCrewCost').innerHTML = `${this.price}`;
     l('crew-members').innerHTML = str;
@@ -122,10 +131,6 @@ let PopUp = function (el, str) {
     this.offy = Math.floor(Math.random() * 20 - 10);
     popUps.push(this);
 };
-
-function l(str) {
-    return document.getElementById(str);
-}
 
 function tankClick() {
     credits += credit_rate;

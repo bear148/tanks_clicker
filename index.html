@@ -10,26 +10,37 @@
         <link rel="stylesheet" href="/style/style.css" />
     </head>
     <body>
-        <div id="stats">
+        <div id="left">
             <h1>Credits: <span id="credit-c">0</span></h1>
             <!-- <h3>Cps: <span id="credit-rate">0</span></h3> -->
             <h1 id="gold">Gold: <span id="gold-c">0</span></h1>
             <div id="buyGold-Booster" class="" onclick="Buy('Gold-Booster')"><p id="buyGold-BoosterCost">500</p></div>
             <div id="gold-boosters"></div>
+            <hr>
+            <h2>Settings</h2>
+            <div>
+                <input type="checkbox" id="popUpsEnabled" name="popUpToggle" value="popUpToggle">
+                <label for="popUptoggle">Toggle PopUps</label>
+            </div>
         </div>
         <div id="middle">
+            <h1 id="middle-title">Select Your Country</h1>
             <div id="country-select">
                 <div class="starterCountry" onmousedown="select('ussr')"><img class="selectFlag" src="/assets/flags/ussr.webp" alt="Soviet Flag"></div>
                 <div class="starterCountry" onmousedown="select('us')"><img class="selectFlag" src="/assets/flags/us.png" alt="American Flag"></div>
             </div>
             <div id="tank" onmousedown="tankClick()">
-
+                
             </div>
+            <h2>Upgrades</h2>
             <div id="crew-members"></div>
         </div>
         <div id="right">
             <div id="store">
-                <div id="buyCrew" class="" onclick="Buy('Crew')"><p id="buyCrewCost">2000</p></div>
+                <div id="buyCrew" class="store-item" onclick="Buy('Crew')">
+                    <p id="buyCrewCost">2000</p>
+                    <span class="crew-tooltip">Crew - Boosts your Credit production without you having to click!</span>
+                </div>
             </div>
         </div>
         <div id="popups"></div>
