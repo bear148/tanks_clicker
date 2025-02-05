@@ -28,18 +28,13 @@ let crew = 0;
 let gold_boosters = 1;
 
 window.onload = function () {
+    /* TO-DO: Add some sort of starter screen that allows you to pick your country */
     Main();
 }
 
-/*
-    To-do:
-    [ ] Move this item variable into its own file and make it a class called ItemManager.
-        Item manager will manage item classes and make this file smaller. The initialization will be handled in the Load function defined above.
-*/
-
 let items = [];
 
-let Item = function(name, description, img, price, func, curr = 1) {
+let Item = function (name, description, img, price, func, curr = 1) {
     this.name = name;
     this.desc = description;
     this.img = img;
@@ -48,7 +43,7 @@ let Item = function(name, description, img, price, func, curr = 1) {
     this.c = curr;
     items[name] = this;
 
-    this.Buy = function() {
+    this.Buy = function () {
         if (this.c == 1) {
             if (credits >= this.price) {
                 credits -= this.price;
