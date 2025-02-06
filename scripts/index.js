@@ -61,7 +61,7 @@ function select(country) {
 }
 
 let Load = function () {
-    /* TO-DO: Add some sort of starter screen that allows you to pick your country */
+    /* TO-DO: [x] Add some sort of starter screen that allows you to pick your country */
     l('tank').innerHTML = `
                 <h2 id="tankName">${currentCountry.tank}</h2>
                 <img id="tankIcon" src="${currentCountry.tankImg}" alt="Soviet MS-1 Tank">
@@ -114,6 +114,12 @@ new Item("Gold-Booster", "An item to boost your gold production.", null, 50, fun
     l('buyGold-BoosterCost').innerHTML = `${this.price}`;
     l('gold-boosters').innerHTML += '<div class="gold-boost"></div>';
 }, 2);
+
+new Item("Consumable", "An item to boost your gold and credit production.", null, 750, function (buy) {
+    if (buy) gold_boosters++;
+    l('buyConsumableCost').innerHTML = `${this.price}`;
+    l('consumables').innerHTML += '<img class="consumable" src=""></img>';
+});
 
 let PopUp = function (el, str) {
     this.el = el;

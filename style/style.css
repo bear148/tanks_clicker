@@ -118,6 +118,7 @@ div #gold-c, div > h1:last-of-type {
     height: 26px;
 }
 
+#buyConsumable,
 #buyCrew {
     display: flex;
     justify-content: center;
@@ -128,9 +129,10 @@ div #gold-c, div > h1:last-of-type {
     height: 40px;
 }
 
+#buyConsumable > p,
 #buyCrew > p {
     color: lime;
-    padding-left: 40px;
+    text-align: center;
 }
 
 #crew-members {
@@ -205,7 +207,7 @@ hr {
     display: block;
 }
 
-.crew-tooltip {
+.tooltip {
     margin-left: 25px;
     margin-right: 25px;
 }
