@@ -25,8 +25,11 @@ let popUps = [];
 let popUpsEnabled = false;
 
 let crew = 0;
+let consumables = 0;
 
 let gold_boosters = 1;
+
+let upgrade_available = false;
 
 function l(str) {
     return document.getElementById(str);
@@ -36,7 +39,7 @@ l('popUpsEnabled').addEventListener('change', () => {
     popUpsEnabled = popUpsEnabled ? false : true;
 })
 
-let Country = function(name, img, tank, tankImg) {
+let Country = function (name, img, tank, tankImg) {
     this.name = name;
     this.img = img;
     this.tank = tank;
@@ -44,13 +47,15 @@ let Country = function(name, img, tank, tankImg) {
 }
 
 function select(country) {
-    switch(country) {
-        case "ussr":
-            currentCountry = new Country("USSR", "/assets/flags/ussr.webp", "MS-1", "/assets/tanks/ms1.png");
+    switch (country) {
+        case 'ussr':
+            currentCountry = new Country('USSR', '/assets/flags/ussr.png', 'MS-1', '/assets/tanks/ms1.png');
             break;
-        case "us":
-            currentCountry = new Country("US", "/assets/flags/us.png", "T1", "/assets/tanks/t1.webp");
+        case 'us':
+            currentCountry = new Country('US', '/assets/flags/us.png', 'T1', '/assets/tanks/t1.webp');
             break;
+        case 'germany':
+            currentCountry = new Country('Germany', '/assets/flags/germany.png', 'Lt.r.', '/assets/tanks/ms1.png');
         default:
             break;
     }
@@ -66,6 +71,9 @@ let Load = function () {
                 <h2 id="tankName">${currentCountry.tank}</h2>
                 <img id="tankIcon" src="${currentCountry.tankImg}" alt="Soviet MS-1 Tank">
                 <img id="tankCountry" src="${currentCountry.img}" alt="Soviet Flag">
+                <div id="tankStatus">
+                    <img class="status-image na-s" id="upgradeIcon" src="/assets/icons/upgrade.png" onclick="upgradeTank('${currentCountry.tank}')">
+                </div>
     `
     l('middle-title').innerText = "Your Current Tanks";
     Main();
@@ -86,13 +94,13 @@ let Item = function (name, description, img, price, func, curr = 1) {
         if (this.c == 1) {
             if (credits >= this.price) {
                 credits -= this.price;
-                this.price = Math.ceil(this.price * 1.1);
+                this.price = Math.ceil(this.price * 1.02);
                 this.func(1);
             }
         } else if (this.c == 2) {
             if (gold >= this.price) {
                 gold -= this.price;
-                this.price = Math.ceil(this.price * 1.3);
+                this.price = Math.ceil(this.price * 1.06);
                 this.func(1);
             }
         }
@@ -116,9 +124,12 @@ new Item("Gold-Booster", "An item to boost your gold production.", null, 50, fun
 }, 2);
 
 new Item("Consumable", "An item to boost your gold and credit production.", null, 750, function (buy) {
-    if (buy) gold_boosters++;
+    if (buy) {
+        consumables++;
+        gold_boosters += 0.2;
+    }
     l('buyConsumableCost').innerHTML = `${this.price}`;
-    l('consumables').innerHTML += '<img class="consumable" src=""></img>';
+    l('consumables').innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
 });
 
 let PopUp = function (el, str) {
@@ -144,13 +155,21 @@ function addGold(howmany, el) {
     gold += howmany;
 }
 
-let Main = function () {
-    let str = "";
+function upgradeTank(tank) {
+    console.log(tank);
+    return;
+}
 
-    if (credits >= 50000) {
+let Main = function () {
+    if (credits >= 50000 && !gold_unlocked) {
         gold_unlocked = true;
     }
 
+    if (credits >= 100000 && !upgrade_available) {
+        upgrade_available = true;
+    }
+
+    let str = "";
     for (let i in popUps) {
         let rect = l(popUps[i].el).getBoundingClientRect();
         let x = Math.floor((rect.left + rect.right) / 2 + popUps[i].offx) - 20;
@@ -183,14 +202,13 @@ let Main = function () {
     }
 
     if (crew && T % Math.ceil(150 / crew) == 0) addCredits(50, 'crew-members');
+    if (consumables && T % Math.ceil(150 / consumables) == 0) addCredits(25, 'consumables');
     if (gold_unlocked && T % Math.ceil(150 / gold_boosters) == 0) addGold(10, 'gold');
 
-    let cps = 0;
-    cps += crew * 10 / 5;
+    if (upgrade_available && l("upgradeIcon").classList.contains("na-s")) l("upgradeIcon").classList.remove("na-s");
 
-    // let floater = Math.round(cps * 10 - Math.floor(cps) * 10);
-    // cps = (cps) + (floater ? ('.' + floater) : '');
-    // l('credit-rate').innerHTML = 'credits/second : ' + cps;
+    let cps = (crew * 10) + (consumables * 5);
+    l('credit-rate').innerHTML = 'Credits/Second: ' + cps;
 
     creditsDisplay += (credits - creditsDisplay) * 0.5;
     l('credit-c').innerHTML = Math.round(creditsDisplay);

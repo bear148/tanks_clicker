@@ -46,13 +46,18 @@ h6 {
     align-items: center;
     background-color: rgb(35, 35, 35);
     border: 1px solid maroon;
+    width: 600px;
 }
 
 #middle {
     border-bottom: 1px solid white;
+    width: 100%;
+    display: flex;
+    flex-flow:column nowrap;
 }
 
-#middle > h1 {
+#middle-title,
+#store-title {
     background-color: rgba(0, 0, 0, 0.2);
     width: 100%;
     text-align: center;
@@ -60,13 +65,16 @@ h6 {
 }
 
 .selectFlag,
-#tank img:last-of-type {
+#tankCountry {
     width: 64px;
 }
 
-#tank * {
+#tankName {
+    font-size: 28px;
+}
+
+#tank *:not(h2) {
     font-size: 16px;
-    pointer-events: none;
     user-select: none;
 }
 
@@ -74,7 +82,7 @@ h6 {
     display: flex;
     flex-flow: column nowrap;
     width: fit-content;
-    font-size: 10px;
+    font-size: 16px;
     background-color: rgba(0, 0, 0, 0.2);
     border-right: 1px solid white;
     height: 100vh;
@@ -111,6 +119,7 @@ div #gold-c, div > h1:last-of-type {
     background-size: contain;
 }
 
+.consumable,
 .crew-bia,
 .crew-int,
 .crew {
@@ -129,6 +138,10 @@ div #gold-c, div > h1:last-of-type {
     height: 40px;
 }
 
+#buyConsumable {
+    background-image: url(/assets/icons/cola_plus.png);
+}
+
 #buyConsumable > p,
 #buyCrew > p {
     color: lime;
@@ -138,11 +151,14 @@ div #gold-c, div > h1:last-of-type {
 #crew-members {
     display: flex;
     flex-flow: row wrap;
-    width: 400px;
 }
 
 .na {
     color: red !important;
+}
+
+.na-s {
+    display: none;
 }
 
 #gold-boosters {
@@ -200,11 +216,8 @@ hr {
 }
 
 .store-item {
+    width: 600px;
     background-color: rgba(0, 0, 0, 0.3);
-}
-
-.store-item:hover .crew-tooltip {
-    display: block;
 }
 
 .tooltip {
@@ -214,4 +227,21 @@ hr {
 
 .coupon {
     margin: 100px;
+}
+
+#tankStatus {
+    align-self: flex-end;
+}
+
+#tankStatus:hover {
+    cursor: pointer;
+}
+
+#upgradeIcon {
+    cursor: pointer;
+}
+
+.status-image {
+    width: 32px;
+    height: 32px;
 }
