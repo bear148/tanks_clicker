@@ -25,6 +25,7 @@ Tanks clicker is a simple idle clicking game inspired by World of Tanks. As of r
 **Pre v0.0.9 versions were not documented**
 
 #### Why this versioning?
+
 Currently, I am only incrementing the minor version until the game has enough content to actually be a game. Once I reach that point, it will go to v1.#.#. Until then, I'm only going to change the minor number. Even though some updates will include new features and others will only be small hot fixes, like I said, the minor number will be the only thing increasing until I am happy with the game.
 
-***ALL ASSETS ARE FROM THE [[tanks.gg]] WEBSITE***
+***ALL ASSETS ARE FROM THE [tanks.gg](tanks.gg) WEBSITE***
