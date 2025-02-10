@@ -154,7 +154,7 @@ function createItems() {
         l('consumables').innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
     });
 
-    new Item("Equipment", "An upgrade to greatly increase credit production.", null, 1250, function (buy) {
+    new Item("Equipment", "An upgrade to greatly increase credit production.", null, 1750, function (buy) {
         if (buy) equipment++;
         l('buyEquipmentCost').innerHTML = `${this.price}`;
         l('equipment').innerHTML += '<img class="equipment" src="/assets/items/vents.png"></img>';

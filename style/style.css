@@ -56,6 +56,7 @@ h6 {
     display: flex;
     flex-flow:column nowrap;
     background-color: rgba(0, 0, 0, 0.2);
+    height: 100vh;
 }
 
 #current-tier,
@@ -254,4 +255,8 @@ hr {
 .status-image {
     width: 32px;
     height: 32px;
+}
+
+#version {
+    color: silver;
 }
