@@ -9,6 +9,8 @@ going to expand upon it in my own tank themed game.
 */
 let countElement = document.getElementById("count");
 let currentCountry = null;
+let currentTechTree = null;
+let currentTier = 1;
 
 let credits = 0;
 let creditsDisplay = 0;
@@ -26,10 +28,13 @@ let popUpsEnabled = false;
 
 let crew = 0;
 let consumables = 0;
+let equipment = 0;
 
 let gold_boosters = 1;
 
 let upgrade_available = false;
+let upgrading = false;
+let upgradeCost = 100000;
 
 function l(str) {
     return document.getElementById(str);
@@ -39,44 +44,27 @@ l('popUpsEnabled').addEventListener('change', () => {
     popUpsEnabled = popUpsEnabled ? false : true;
 })
 
-let Country = function (name, img, tank, tankImg) {
+let Tank = function (name, img) {
     this.name = name;
     this.img = img;
-    this.tank = tank;
-    this.tankImg = tankImg;
 }
 
-function select(country) {
-    switch (country) {
-        case 'ussr':
-            currentCountry = new Country('USSR', '/assets/flags/ussr.png', 'MS-1', '/assets/tanks/ms1.png');
-            break;
-        case 'us':
-            currentCountry = new Country('US', '/assets/flags/us.png', 'T1', '/assets/tanks/t1.webp');
-            break;
-        case 'germany':
-            currentCountry = new Country('Germany', '/assets/flags/germany.png', 'Lt.r.', '/assets/tanks/ms1.png');
-        default:
-            break;
+let TechTree = function (flag, t1, t2 = null, t3 = null, t4 = null, t5 = null, t6 = null, t7 = null, t8 = null, t9 = null, t10 = null) {
+    this.t1 = t1;
+    this.t2 = t2;
+    this.t3 = t3;
+    this.t4 = t4;
+    this.t5 = t5;
+    this.t6 = t6;
+    this.t7 = t7;
+    this.t8 = t8;
+    this.t9 = t9;
+    this.t10 = t10;
+    this.flag = flag;
+
+    this.getTanks = function () {
+        return [this.t1, this.t2, this.t3, this.t4, this.t5, this.t6, this.t7, this.t8, this.t9, this.t10];
     }
-
-    l('country-select').innerHTML = "";
-
-    Load();
-}
-
-let Load = function () {
-    /* TO-DO: [x] Add some sort of starter screen that allows you to pick your country */
-    l('tank').innerHTML = `
-                <h2 id="tankName">${currentCountry.tank}</h2>
-                <img id="tankIcon" src="${currentCountry.tankImg}" alt="Soviet MS-1 Tank">
-                <img id="tankCountry" src="${currentCountry.img}" alt="Soviet Flag">
-                <div id="tankStatus">
-                    <img class="status-image na-s" id="upgradeIcon" src="/assets/icons/upgrade.png" onclick="upgradeTank('${currentCountry.tank}')">
-                </div>
-    `
-    l('middle-title').innerText = "Your Current Tanks";
-    Main();
 }
 
 let items = [];
@@ -111,26 +99,84 @@ let Buy = function (i) {
     items[i].Buy();
 }
 
-new Item("Crew", "A crew member to help skillfully guide your tank.", null, 1000, function (buy) {
-    if (buy) crew++;
-    l('buyCrewCost').innerHTML = `${this.price}`;
-    l('crew-members').innerHTML += '<img class="crew-bia" src="/assets/items/brothers.png"></img>';
-})
+function buildTechTree(c) {
+    switch (c) {
+        case 'ussr':
+            // T1
+            let t1 = new Tank("MS-1", "/assets/tanks/ms1.png");
 
-new Item("Gold-Booster", "An item to boost your gold production.", null, 50, function (buy) {
-    if (buy) gold_boosters++;
-    l('buyGold-BoosterCost').innerHTML = `${this.price}`;
-    l('gold-boosters').innerHTML += '<div class="gold-boost"></div>';
-}, 2);
+            let t2 = [new Tank("BT-2", "/assets/tanks/bt2.png"), new Tank("T-60", "/assets/tanks/t60.png")]
 
-new Item("Consumable", "An item to boost your gold and credit production.", null, 750, function (buy) {
-    if (buy) {
-        consumables++;
-        gold_boosters += 0.2;
+            let t3 = [new Tank("BT-5", "/assets/tanks/bt5.png"), new Tank("T-70", "/assets/tanks/t70.png")];
+
+            let t4 = [new Tank("SU-76M", "/assets/tanks/su76m.png"), new Tank("T-28", "/assets/tanks/t28.png"), new Tank("BT-7", "/assets/tanks/bt7.png")];
+
+            currentTechTree = new TechTree("/assets/flags/ussr.png", t1, t2, t3, t4);
+            console.log("Built Tech Tree");
+            break;
+        case 'us':
+            break;
+        case 'germany':
+            break;
+        default:
+            return "err";
     }
-    l('buyConsumableCost').innerHTML = `${this.price}`;
-    l('consumables').innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
-});
+}
+
+function select(country) {
+    console.log("Selected Country: " + country);
+    buildTechTree(country);
+
+    l('country-select').innerHTML = "";
+
+    Load();
+}
+
+function createItems() {
+    new Item("Crew", "A crew member to help skillfully guide your tank.", null, 1000, function (buy) {
+        if (buy) crew++;
+        l('buyCrewCost').innerHTML = `${this.price}`;
+        l('crew-members').innerHTML += '<img class="crew-bia" src="/assets/items/brothers.png"></img>';
+    })
+
+    new Item("Gold-Booster", "An item to boost your gold production.", null, 50, function (buy) {
+        if (buy) gold_boosters++;
+        l('buyGold-BoosterCost').innerHTML = `${this.price}`;
+        l('gold-boosters').innerHTML += '<div class="gold-boost"></div>';
+    }, 2);
+
+    new Item("Consumable", "An item to boost your gold and credit production.", null, 750, function (buy) {
+        if (buy) {
+            consumables++;
+            gold_boosters += 0.2;
+        }
+        l('buyConsumableCost').innerHTML = `${this.price}`;
+        l('consumables').innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
+    });
+
+    new Item("Equipment", "An upgrade to greatly increase credit production.", null, 1250, function (buy) {
+        if (buy) equipment++;
+        l('buyEquipmentCost').innerHTML = `${this.price}`;
+        l('equipment').innerHTML += '<img class="equipment" src="/assets/items/vents.png"></img>';
+    });
+}
+
+let Load = function () {
+    createItems();
+
+    l('tank').innerHTML = `
+                <h2 id="tankName">${currentTechTree.t1.name}</h2>
+                <img id="tankIcon" src="${currentTechTree.t1.img}" alt="Soviet MS-1 Tank">
+                <img id="tankCountry" src="${currentTechTree.flag}" alt="Soviet Flag">
+                <div id="tankStatus">
+                    <img class="status-image na-s" id="upgradeIcon" src="/assets/icons/upgrade.png" onclick="upgradeTankMenu()">
+                </div>
+    `
+    l('middle-title').innerText = "Your Current Tanks";
+    l('current-tier').innerText = "Your current tier is: " + currentTier;
+
+    Main();
+}
 
 let PopUp = function (el, str) {
     this.el = el;
@@ -155,9 +201,49 @@ function addGold(howmany, el) {
     gold += howmany;
 }
 
-function upgradeTank(tank) {
-    console.log(tank);
-    return;
+function upgradeTankMenu() {
+    upgrading = true;
+
+    let str = "";
+
+    str += "<h2 id='tankName'>Select Your Next Tank:</h2>"
+
+    l('tank').setAttribute("onmousedown", "");
+
+    for (let t of currentTechTree.getTanks()[currentTier]) {
+        str += `
+        <figure>
+            <img class="upgradeTankIcon" src="${t.img}" onclick="upgradeTo('${t.name}', '${t.img}')" alt="Soviet MS-1 Tank">
+            <figcaption>${t.name}</figcaption>
+        </figure>
+        `
+    }
+
+    currentTier++;
+
+    l('tank').innerHTML = str;
+}
+
+function upgradeTo(tank, img) {
+    l('tank').innerHTML = `
+            <h2 id="tankName">${tank}</h2>
+            <img id="tankIcon" src="${img}">
+            <img id="tankCountry" src="${currentTechTree.flag}" alt="Soviet Flag">
+            <div id="tankStatus">
+                <img class="status-image na-s" id="upgradeIcon" src="/assets/icons/upgrade.png" onclick="upgradeTankMenu()">
+            </div>
+    `
+
+    upgrading = false;
+    upgrade_available = false;
+
+    credit_rate = credit_rate * 1.2;
+
+    credits -= upgradeCost;
+    upgradeCost = (upgradeCost >= 6100000) ? 6100000 : upgradeCost * 1.5;
+
+    l('current-tier').innerText = "Your current tier is: " + currentTier;
+    l('tank').setAttribute("onmousedown", "tankClick()");
 }
 
 let Main = function () {
@@ -165,7 +251,7 @@ let Main = function () {
         gold_unlocked = true;
     }
 
-    if (credits >= 100000 && !upgrade_available) {
+    if (credits >= upgradeCost && !upgrade_available) {
         upgrade_available = true;
     }
 
@@ -195,19 +281,22 @@ let Main = function () {
     }
     l("popups").innerHTML = str;
 
-    for (let i in items) {
-        if (credits >= items[i].price && items[i].c == 1) l('buy' + items[i].name + 'Cost').className = '';
-        else if (gold >= items[i].price && items[i].c == 2) l('buy' + items[i].name + 'Cost').className = '';
-        else l('buy' + items[i].name + 'Cost').className = 'na';
+    if (!upgrading) {
+        for (let i in items) {
+            if (credits >= items[i].price && items[i].c == 1) l('buy' + items[i].name + 'Cost').className = '';
+            else if (gold >= items[i].price && items[i].c == 2) l('buy' + items[i].name + 'Cost').className = '';
+            else l('buy' + items[i].name + 'Cost').className = 'na';
+        }
+
+        if (crew && T % Math.ceil(150 / crew) == 0) addCredits(50, 'crew-members');
+        if (consumables && T % Math.ceil(150 / consumables) == 0) addCredits(25, 'consumables');
+        if (equipment && T % Math.ceil(150 / equipment) == 0) addCredits(100, 'equipment');
+        if (gold_unlocked && T % Math.ceil(150 / gold_boosters) == 0) addGold(10, 'gold');
+
+        if (upgrade_available && l("upgradeIcon").classList.contains("na-s")) l("upgradeIcon").classList.remove("na-s");
     }
 
-    if (crew && T % Math.ceil(150 / crew) == 0) addCredits(50, 'crew-members');
-    if (consumables && T % Math.ceil(150 / consumables) == 0) addCredits(25, 'consumables');
-    if (gold_unlocked && T % Math.ceil(150 / gold_boosters) == 0) addGold(10, 'gold');
-
-    if (upgrade_available && l("upgradeIcon").classList.contains("na-s")) l("upgradeIcon").classList.remove("na-s");
-
-    let cps = (crew * 10) + (consumables * 5);
+    let cps = (crew * 10) + (consumables * 5) + (equipment * 20);
     l('credit-rate').innerHTML = 'Credits/Second: ' + cps;
 
     creditsDisplay += (credits - creditsDisplay) * 0.5;

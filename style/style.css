@@ -12,7 +12,7 @@ body {
     background-position: center;
 }
 
-* {
+*:not(ul) {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: white;
     background-repeat: no-repeat;
@@ -34,6 +34,7 @@ h6 {
     border: 1px solid white;
     width: fit-content;
     height: fit-content;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 #tank {
@@ -46,7 +47,7 @@ h6 {
     align-items: center;
     background-color: rgb(35, 35, 35);
     border: 1px solid maroon;
-    width: 600px;
+    width: 1000px;
 }
 
 #middle {
@@ -54,8 +55,10 @@ h6 {
     width: 100%;
     display: flex;
     flex-flow:column nowrap;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
+#current-tier,
 #middle-title,
 #store-title {
     background-color: rgba(0, 0, 0, 0.2);
@@ -119,6 +122,7 @@ div #gold-c, div > h1:last-of-type {
     background-size: contain;
 }
 
+.equipment,
 .consumable,
 .crew-bia,
 .crew-int,
@@ -127,6 +131,7 @@ div #gold-c, div > h1:last-of-type {
     height: 26px;
 }
 
+#buyEquipment,
 #buyConsumable,
 #buyCrew {
     display: flex;
@@ -142,7 +147,12 @@ div #gold-c, div > h1:last-of-type {
     background-image: url(/assets/icons/cola_plus.png);
 }
 
+#buyEquipment {
+    background-image: url("/assets/icons/vents_plus.png");
+}
+
 #buyConsumable > p,
+#buyEquipment > p,
 #buyCrew > p {
     color: lime;
     text-align: center;
@@ -164,7 +174,6 @@ div #gold-c, div > h1:last-of-type {
 #gold-boosters {
     display: flex;
     flex-flow: row wrap;
-    width: 400px;
 }
 
 .gold-boost {
@@ -198,6 +207,7 @@ div #gold-c, div > h1:last-of-type {
     height: 100vh;
 }
 
+.upgradeTankIcon,
 #tankIcon {
     width: 100px;
     height: 100px;

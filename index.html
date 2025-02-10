@@ -22,13 +22,20 @@
                 <input type="checkbox" id="popUpsEnabled" name="popUpToggle" value="popUpToggle">
                 <label for="popUptoggle">Toggle PopUps</label>
             </div>
+            <hr>
+            <h2>Tips</h2>
+            <ul>
+                <li>Every time you upgrade your tank, your current credits per click rate is increased by 20%.</li>
+                <li>Even though consumables boost gold production, they do not enable it before the 50K credit threshold.</li>
+                <li>Max Upgrade Tier is 3.</li>
+            </ul>
         </div>
         <div id="middle">
             <h1 id="middle-title">Select Your Country</h1>
             <div id="country-select">
                 <div class="starterCountry" onmousedown="select('ussr')"><img class="selectFlag" src="/assets/flags/ussr.png" alt="Soviet Flag"></div>
-                <div class="starterCountry" onmousedown="select('us')"><img class="selectFlag" src="/assets/flags/us.png" alt="American Flag"></div>
-                <div class="starterCountry" onmousedown="select('germany')"><img class="selectFlag" src="/assets/flags/germany.png" alt="German Flag"></div>
+                <!-- <div class="starterCountry" onmousedown="select('us')"><img class="selectFlag" src="/assets/flags/us.png" alt="American Flag"></div>
+                <div class="starterCountry" onmousedown="select('germany')"><img class="selectFlag" src="/assets/flags/germany.png" alt="German Flag"></div> -->
             </div>
             <div id="tank" onmousedown="tankClick()">
                 
@@ -38,6 +45,9 @@
             <div id="crew-members"></div>
             <h3>Consumables</h3>
             <div id="consumables"></div>
+            <h3>Equipment</h3>
+            <div id="equipment"></div>
+            <h3 id="current-tier">Your current tier is: 0</h3>
         </div>
         <div id="right">
             <h1 id="store-title">Upgrades</h1>
@@ -49,6 +59,10 @@
                 <div id="buyConsumable" class="store-item" onclick="Buy('Consumable')">
                     <p id="buyConsumableCost">750</p>
                     <span class="tooltip">Consumable - Boosts credit & gold production.</span>
+                </div>
+                <div id="buyEquipment" class="store-item" onclick="Buy('Equipment')">
+                    <p id="buyEquipmentCost">1250</p>
+                    <span class="tooltip">Equipment - Greatly boosts credit production.</span>
                 </div>
             </div>
         </div>
