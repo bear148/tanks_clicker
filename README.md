@@ -4,13 +4,17 @@ Tanks clicker is a simple idle clicking game inspired by World of Tanks. As of r
 
 ## Changelog
 
-### *v0.0.11*
-- Added tier 5 and 6 to the USSR tech tree.
-- Adjusted main tank section size.
+### *v0.0.12*
+- Tier 6 added to the USSR tech tree.
 
 <details>
 <summary>Previous Patches</summary>
 <br>
+
+### *v0.0.11*
+
+- Added tier 5 and 6 to the USSR tech tree.
+- Adjusted main tank section size.
 
 ### *v0.0.10*
 

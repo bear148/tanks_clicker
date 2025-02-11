@@ -115,6 +115,8 @@ function buildTechTree(c) {
 
             let t6 = [new Tank("SU-8", "/assets/tanks/su8.png"), new Tank("SU-100", "/assets/tanks/su100.png"), new Tank("KV-2", "/assets/tanks/kv2.png"), new Tank("KV-1S", "/assets/tanks/kv1s.png"), new Tank("T-150", "/assets/tanks/t150.png"), new Tank("T-34-85", "/assets/tanks/t3485.png"), new Tank("A-43", "/assets/tanks/a43.png"), new Tank("MT-25", "/assets/tanks/mt25.png")];
 
+            let t7 = [new Tank("A-44", "/assets/tanks/a44.png"), new Tank("IS", "/assets/tanks/is.png"), new Tank("KV-3", "/assets/tanks/kv3.png"), new Tank("LTG", "/assets/tanks/ltg.png"), new Tank("S-51", "/assets/tanks/s51.png"), new Tank("SU-100M1", "/assets/tanks/su100m1.png"), new Tank("SU-152", "/assets/tanks/su152.png"), new Tank("T-43", "/assets/tanks/t43.png")];
+
             currentTechTree = new TechTree("/assets/flags/ussr.png", t1, t2, t3, t4, t5, t6);
             console.log("Built Tech Tree");
             break;
