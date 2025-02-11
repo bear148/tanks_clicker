@@ -4,7 +4,15 @@ Tanks clicker is a simple idle clicking game inspired by World of Tanks. As of r
 
 ## Changelog
 
-### *(latest patch) v0.0.10*
+### *v0.0.11*
+- Added tier 5 and 6 to the USSR tech tree.
+- Adjusted main tank section size.
+
+<details>
+<summary>Previous Patches</summary>
+<br>
+
+### *v0.0.10*
 
 - Equipment rebalancing
   - Price: Increase from 1250 to 1750.
@@ -13,7 +21,7 @@ Tanks clicker is a simple idle clicking game inspired by World of Tanks. As of r
 - Version number added to game page.
 - Tips section fix.
 
-### *(latest update) v0.0.9*
+### *v0.0.9*
 
 - Added the Equipment Upgrade
 - Added the ability to move along the tech tree. You can currently go up to tier 4 tanks on the USSR tech tree and each upgrade boosts the amount of credits you get when you click the tank by 20%.
@@ -23,6 +31,8 @@ Tanks clicker is a simple idle clicking game inspired by World of Tanks. As of r
 - Added a tier monitor at the bottom of the main tank screen.
 - Did some code refactoring to make the game more scalable.
 **Pre v0.0.9 versions were not documented**
+
+</details>
 
 #### Why this versioning?
 
