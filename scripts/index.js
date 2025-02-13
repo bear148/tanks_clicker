@@ -5,7 +5,7 @@ Their project is located at makeitrainiest.netlify.app
 Using a basic outline from how they made theirs, I am
 going to expand upon it in my own tank themed game.
 
-- Michael S. Jan 22. 2024
+- Michael S. Jan 22. 2025
 */
 let countElement = document.getElementById("count");
 let currentCountry = null;
@@ -117,7 +117,9 @@ function buildTechTree(c) {
 
             let t7 = [new Tank("A-44", "/assets/tanks/a44.png"), new Tank("IS", "/assets/tanks/is.png"), new Tank("KV-3", "/assets/tanks/kv3.png"), new Tank("LTG", "/assets/tanks/ltg.png"), new Tank("S-51", "/assets/tanks/s51.png"), new Tank("SU-100M1", "/assets/tanks/su100m1.png"), new Tank("SU-152", "/assets/tanks/su152.png"), new Tank("T-43", "/assets/tanks/t43.png")];
 
-            currentTechTree = new TechTree("/assets/flags/ussr.png", t1, t2, t3, t4, t5, t6, t7);
+            let t8 = [new Tank("SU-14-2", "/assets/tanks/su142.png"), new Tank("ISU-152", "/assets/tanks/isu152.png"), new Tank("SU-101", "/assets/tanks/su101.png"), new Tank("IS-3", "/assets/tanks/is3.png"), new Tank("IS-M", "/assets/tanks/ism.png"), new Tank("KV-4", "/assets/tanks/kv4.png"), new Tank("IS-2-II", "/assets/tanks/is2ii.png"), new Tank("T-44", "/assets/tanks/t44.png"), new Tank("Object 416", "/assets/tanks/obj416.png"), new Tank("LTTB", "/assets/tanks/lttb.png")];
+
+            currentTechTree = new TechTree("/assets/flags/ussr.png", t1, t2, t3, t4, t5, t6, t7, t8);
             console.log("Built Tech Tree");
             break;
         case 'us':
