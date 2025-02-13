@@ -3,6 +3,7 @@
 body {
     display: flex;
     flex-flow: row nowrap;
+    overflow-y: hidden;
 }
 
 body {
@@ -46,6 +47,7 @@ h6 {
     background-color: rgb(35, 35, 35);
     border: 1px solid maroon;
     max-width: 1200px;
+    min-width: 300px;
 }
 
 #middle {
@@ -60,7 +62,7 @@ h6 {
 #current-tier,
 #middle-title,
 #store-title {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.427);
     width: 100%;
     text-align: center;
     margin-bottom: 25px;
@@ -72,11 +74,10 @@ h6 {
 }
 
 #tankName {
-    font-size: 28px;
+    font-size: 16px;
 }
 
 #tank *:not(h2) {
-    font-size: 16px;
     user-select: none;
 }
 
@@ -88,6 +89,14 @@ h6 {
     background-color: rgba(0, 0, 0, 0.2);
     border-right: 1px solid white;
     height: 100vh;
+}
+
+.info > p {
+    color: silver;
+}
+
+.info > a {
+    color: powderblue;
 }
 
 div #credit-c, div > h1:first-of-type {
@@ -111,20 +120,8 @@ div #gold-c, div > h1:last-of-type {
     cursor: pointer;
 }
 
-.crew-bia {
-    background-image: url('/assets/items/brothers.png');
-    background-size: contain;
-}
-
-.crew-int {
-    background-image: url('/assets/items/brothers.png');
-    background-size: contain;
-}
-
 .equipment,
 .consumable,
-.crew-bia,
-.crew-int,
 .crew {
     width: 26px;
     height: 26px;
@@ -206,10 +203,15 @@ div #gold-c, div > h1:last-of-type {
     height: 100vh;
 }
 
-.upgradeTankIcon,
 #tankIcon {
     width: 100px;
     height: 100px;
+    object-fit: cover;
+}
+
+.upgradeTankIcon {
+    width: 60px;
+    height: 60px;
     object-fit: cover;
 }
 
@@ -257,4 +259,8 @@ hr {
 
 #version {
     color: silver;
+}
+
+figcaption {
+    font-size: 12px;
 }

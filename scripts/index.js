@@ -36,6 +36,61 @@ let upgrade_available = false;
 let upgrading = false;
 let upgradeCost = 100000;
 
+let AssetPaths = [
+    "/assets/tanks/ussr/",
+    "/assets/items/equip/",
+    "/assets/items/skills/"
+]
+
+let equipmentImages = [
+    "aimdrive.png",
+    "aiming.png",
+    "antifrag.png",
+    "bino.png",
+    "camo.png",
+    "config.png",
+    "extrahealth.png",
+    "optics.png",
+    "rammer.png",
+    "rotation.png",
+    "turbo.png",
+    "vents.png"
+]
+
+let crewSkillImages = [
+    "ammunitionImprove.png",
+    "armorer.png",
+    "badRoadsKing.png",
+    "camo.png",
+    "coordination.png",
+    "desperado.png",
+    "eagleEye.png",
+    "emergency.png",
+    "enemyShotPredictor.png",
+    "expert.png",
+    "finder.png",
+    "fireFighting.png",
+    "focus.png",
+    "interference.png",
+    "intuition.png",
+    "melee.png",
+    "motorExpert.png",
+    "pedant.png",
+    "perfectCharge.png",
+    "practical.png",
+    "quickAiming.png",
+    "rammingMaster.png",
+    "rancorous.png",
+    "reliablePlacement.png",
+    "sideBySide.png",
+    "signalInterception.png",
+    "smoothDriving.png",
+    "smoothTurret.png",
+    "sniper.png",
+    "tutor.png",
+    "virtuoso.png"
+]
+
 function l(str) {
     return document.getElementById(str);
 }
@@ -44,12 +99,43 @@ l('popUpsEnabled').addEventListener('change', () => {
     popUpsEnabled = popUpsEnabled ? false : true;
 })
 
+function randomImage(imageArray) {
+    return imageArray[Math.round(Math.random() * ((imageArray.length-1) - 0) + 0)]
+}
+
+function romanNumeral(n) {
+    switch(n) {
+        case 1:
+            return "I";
+        case 2:
+            return "II";
+        case 3:
+            return "III";
+        case 4:
+            return "IV";
+        case 5:
+            return "V";
+        case 6:
+            return "VI";
+        case 7:
+            return "VII";
+        case 8:
+            return "VIII";
+        case 9:
+            return "IX";
+        case 10:
+            return "X";
+        default:
+            return "Not Handled Yet";
+    }
+}
+
 let Tank = function (name, img) {
     this.name = name;
     this.img = img;
 }
 
-let TechTree = function (flag, t1, t2 = null, t3 = null, t4 = null, t5 = null, t6 = null, t7 = null, t8 = null, t9 = null, t10 = null) {
+let TechTree = function (flag, t1, t2 = null, t3 = null, t4 = null, t5 = null, t6 = null, t7 = null, t8 = null, t9 = null, t10 = null, reward = null) {
     this.t1 = t1;
     this.t2 = t2;
     this.t3 = t3;
@@ -60,6 +146,7 @@ let TechTree = function (flag, t1, t2 = null, t3 = null, t4 = null, t5 = null, t
     this.t8 = t8;
     this.t9 = t9;
     this.t10 = t10;
+    this.reward = reward;
     this.flag = flag;
 
     this.getTanks = function () {
@@ -103,23 +190,25 @@ function buildTechTree(c) {
     switch (c) {
         case 'ussr':
             // T1
-            let t1 = new Tank("MS-1", "/assets/tanks/ms1.png");
+            let t1 = new Tank(`MS-1`, `${AssetPaths[0]}ms1.png`);
 
-            let t2 = [new Tank("BT-2", "/assets/tanks/bt2.png"), new Tank("T-60", "/assets/tanks/t60.png")]
+            let t2 = [new Tank(`BT-2`, `${AssetPaths[0]}bt2.png`), new Tank(`T-60`, `${AssetPaths[0]}t60.png`)]
 
-            let t3 = [new Tank("BT-5", "/assets/tanks/bt5.png"), new Tank("T-70", "/assets/tanks/t70.png")];
+            let t3 = [new Tank(`BT-5`, `${AssetPaths[0]}bt5.png`), new Tank(`T-70`, `${AssetPaths[0]}t70.png`)];
 
-            let t4 = [new Tank("SU-76M", "/assets/tanks/su76m.png"), new Tank("T-28", "/assets/tanks/t28.png"), new Tank("BT-7", "/assets/tanks/bt7.png")];
+            let t4 = [new Tank(`SU-76M`, `${AssetPaths[0]}su76m.png`), new Tank(`T-28`, `${AssetPaths[0]}t28.png`), new Tank(`BT-7`, `${AssetPaths[0]}bt7.png`)];
 
-            let t5 = [new Tank("A-20", "/assets/tanks/a20.png"), new Tank("KV-1", "/assets/tanks/kv1.png"), new Tank("SU-85", "/assets/tanks/su85.png"), new Tank("SU-122A", "/assets/tanks/su122a.png"), new Tank("T-34", "/assets/tanks/t34.png")];
+            let t5 = [new Tank(`A-20`, `${AssetPaths[0]}a20.png`), new Tank(`KV-1`, `${AssetPaths[0]}kv1.png`), new Tank(`SU-85`, `${AssetPaths[0]}su85.png`), new Tank(`SU-122A`, `${AssetPaths[0]}su122a.png`), new Tank(`T-34`, `${AssetPaths[0]}t34.png`)];
 
-            let t6 = [new Tank("SU-8", "/assets/tanks/su8.png"), new Tank("SU-100", "/assets/tanks/su100.png"), new Tank("KV-2", "/assets/tanks/kv2.png"), new Tank("KV-1S", "/assets/tanks/kv1s.png"), new Tank("T-150", "/assets/tanks/t150.png"), new Tank("T-34-85", "/assets/tanks/t3485.png"), new Tank("A-43", "/assets/tanks/a43.png"), new Tank("MT-25", "/assets/tanks/mt25.png")];
+            let t6 = [new Tank(`SU-8`, `${AssetPaths[0]}su8.png`), new Tank(`SU-100`, `${AssetPaths[0]}su100.png`), new Tank(`KV-2`, `${AssetPaths[0]}kv2.png`), new Tank(`KV-1S`, `${AssetPaths[0]}kv1s.png`), new Tank(`T-150`, `${AssetPaths[0]}t150.png`), new Tank(`T-34-85`, `${AssetPaths[0]}t3485.png`), new Tank(`A-43`, `${AssetPaths[0]}a43.png`), new Tank(`MT-25`, `${AssetPaths[0]}mt25.png`)];
 
-            let t7 = [new Tank("A-44", "/assets/tanks/a44.png"), new Tank("IS", "/assets/tanks/is.png"), new Tank("KV-3", "/assets/tanks/kv3.png"), new Tank("LTG", "/assets/tanks/ltg.png"), new Tank("S-51", "/assets/tanks/s51.png"), new Tank("SU-100M1", "/assets/tanks/su100m1.png"), new Tank("SU-152", "/assets/tanks/su152.png"), new Tank("T-43", "/assets/tanks/t43.png")];
+            let t7 = [new Tank(`A-44`, `${AssetPaths[0]}a44.png`), new Tank(`IS`, `${AssetPaths[0]}is.png`), new Tank(`KV-3`, `${AssetPaths[0]}kv3.png`), new Tank(`LTG`, `${AssetPaths[0]}ltg.png`), new Tank(`S-51`, `${AssetPaths[0]}s51.png`), new Tank(`SU-100M1`, `${AssetPaths[0]}su100m1.png`), new Tank(`SU-152`, `${AssetPaths[0]}su152.png`), new Tank(`T-43`, `${AssetPaths[0]}t43.png`)];
 
-            let t8 = [new Tank("SU-14-2", "/assets/tanks/su142.png"), new Tank("ISU-152", "/assets/tanks/isu152.png"), new Tank("SU-101", "/assets/tanks/su101.png"), new Tank("IS-3", "/assets/tanks/is3.png"), new Tank("IS-M", "/assets/tanks/ism.png"), new Tank("KV-4", "/assets/tanks/kv4.png"), new Tank("IS-2-II", "/assets/tanks/is2ii.png"), new Tank("T-44", "/assets/tanks/t44.png"), new Tank("Object 416", "/assets/tanks/obj416.png"), new Tank("LTTB", "/assets/tanks/lttb.png")];
+            let t8 = [new Tank(`SU-14-2`, `${AssetPaths[0]}su142.png`), new Tank(`ISU-152`, `${AssetPaths[0]}isu152.png`), new Tank(`SU-101`, `${AssetPaths[0]}su101.png`), new Tank(`IS-3`, `${AssetPaths[0]}is3.png`), new Tank(`IS-M`, `${AssetPaths[0]}ism.png`), new Tank(`KV-4`, `${AssetPaths[0]}kv4.png`), new Tank(`IS-2-II`, `${AssetPaths[0]}is2ii.png`), new Tank(`T-44`, `${AssetPaths[0]}t44.png`), new Tank(`Object 416`, `${AssetPaths[0]}obj416.png`), new Tank(`LTTB`, `${AssetPaths[0]}lttb.png`)];
 
-            currentTechTree = new TechTree("/assets/flags/ussr.png", t1, t2, t3, t4, t5, t6, t7, t8);
+            let t9 = [new Tank(`212A`, `${AssetPaths[0]}212a.png`), new Tank(`Object 263`, `${AssetPaths[0]}obj263.png`), new Tank(`Object 704`, `${AssetPaths[0]}obj704.png`), new Tank(`T-10`, `${AssetPaths[0]}t10.png`), new Tank(`Object 257`, `${AssetPaths[0]}obj257.png`), new Tank(`Object 705`, `${AssetPaths[0]}obj705.png`), new Tank(`ST-I`, `${AssetPaths[0]}sti.png`), new Tank(`IS-3-II`, `${AssetPaths[0]}is3ii.png`), new Tank(`Object 430`, `${AssetPaths[0]}obj430.png`), new Tank(`T-54`, `${AssetPaths[0]}t54.png`), new Tank(`Object 430 II`, `${AssetPaths[0]}obj430vii.png`), new Tank(`T-54 ltwt.`, `${AssetPaths[0]}t54ltwt.png`)];
+
+            currentTechTree = new TechTree("/assets/flags/ussr.png", t1, t2, t3, t4, t5, t6, t7, t8, t9);
             console.log("Built Tech Tree");
             break;
         case 'us':
@@ -144,7 +233,7 @@ function createItems() {
     new Item("Crew", "A crew member to help skillfully guide your tank.", null, 1000, function (buy) {
         if (buy) crew++;
         l('buyCrewCost').innerHTML = `${this.price}`;
-        l('crew-members').innerHTML += '<img class="crew-bia" src="/assets/items/brothers.png"></img>';
+        l('crew-members').innerHTML += `<img class="crew" src="${AssetPaths[2]}${randomImage(crewSkillImages)}"></img>`;
     })
 
     new Item("Gold-Booster", "An item to boost your gold production.", null, 50, function (buy) {
@@ -165,7 +254,7 @@ function createItems() {
     new Item("Equipment", "An upgrade to greatly increase credit production.", null, 1750, function (buy) {
         if (buy) equipment++;
         l('buyEquipmentCost').innerHTML = `${this.price}`;
-        l('equipment').innerHTML += '<img class="equipment" src="/assets/items/vents.png"></img>';
+        l('equipment').innerHTML += `<img class="equipment" src="${AssetPaths[1]}${randomImage(equipmentImages)}"></img>`;
     });
 }
 
@@ -181,7 +270,8 @@ let Load = function () {
                 </div>
     `
     l('middle-title').innerText = "Your Current Tanks";
-    l('current-tier').innerText = "Your current tier is: " + currentTier;
+    l('current-tier').innerText = "Your current tier is: " + romanNumeral(currentTier);
+    l('tank').setAttribute("onmousedown", "tankClick()");
 
     Main();
 }
@@ -197,7 +287,7 @@ let PopUp = function (el, str) {
 
 function tankClick() {
     credits += credit_rate;
-    if (popUps.length < 260 && popUpsEnabled) new PopUp("tank", "+" + credit_rate);
+    if (popUps.length < 260 && popUpsEnabled) new PopUp("tank", "+" + Math.round(credit_rate));
 }
 
 function addCredits(howmany, el) {
@@ -259,7 +349,7 @@ let Main = function () {
         gold_unlocked = true;
     }
 
-    if (credits >= upgradeCost && !upgrade_available) {
+    if (credits >= upgradeCost && !upgrade_available && currentTier != 9) {
         upgrade_available = true;
     }
 
@@ -268,22 +358,9 @@ let Main = function () {
         let rect = l(popUps[i].el).getBoundingClientRect();
         let x = Math.floor((rect.left + rect.right) / 2 + popUps[i].offx) - 20;
         let y =
-            Math.floor(
-                (rect.top + rect.bottom) / 2 -
-                Math.pow(popUps[i].life / 100, 0.5) * 100 +
-                popUps[i].offy
-            ) - 30;
+            Math.floor((rect.top + rect.bottom) / 2 - Math.pow(popUps[i].life / 100, 0.5) * 100 + popUps[i].offy) - 30;
         let opacity = 1 - (Math.max(popUps[i].life, 80) - 80) / 20;
-        str +=
-            '<div class="pop" style="position:absolute;left:' +
-            x +
-            "px;top:" +
-            y +
-            "px;opacity:" +
-            opacity +
-            ';">' +
-            popUps[i].str +
-            "</div>";
+        str += '<div class="pop" style="position:absolute;left:' + x + "px;top:" + y + "px;opacity:" + opacity + ';">' + popUps[i].str + "</div>";
         popUps[i].life += 2;
         if (popUps[i].life >= 100) popUps.splice(i, 1);
     }
