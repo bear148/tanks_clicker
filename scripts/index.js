@@ -269,7 +269,7 @@ let Load = function () {
                     <img class="status-image na-s" id="upgradeIcon" src="/assets/icons/upgrade.png" onclick="upgradeTankMenu()">
                 </div>
     `
-    l('middle-title').innerText = "Your Current Tanks";
+    l('main-header').innerText = "Your Current Tanks";
     l('current-tier').innerText = "Your current tier is: " + romanNumeral(currentTier);
     l('tank').setAttribute("onmousedown", "tankClick()");
 

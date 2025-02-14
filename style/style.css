@@ -60,12 +60,13 @@ h6 {
 }
 
 #current-tier,
-#middle-title,
+.middle-title,
 #store-title {
     background-color: rgba(0, 0, 0, 0.427);
     width: 100%;
     text-align: center;
     margin-bottom: 25px;
+    color: gold;
 }
 
 .selectFlag,
@@ -99,11 +100,11 @@ h6 {
     color: powderblue;
 }
 
-div #credit-c, div > h1:first-of-type {
+div #credit-c {
     color: silver;
 }
 
-div #gold-c, div > h1:last-of-type {
+div #gold-c {
     color: gold;
 }
 
@@ -263,4 +264,17 @@ hr {
 
 figcaption {
     font-size: 12px;
+}
+
+#reward-tank-shop {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#reward-tank-shop > h2,
+#reward-tank-shop > h3 {
+    color: red;
+    font-weight: bold;
 }
