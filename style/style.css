@@ -90,6 +90,7 @@ h6 {
     background-color: rgba(0, 0, 0, 0.2);
     border-right: 1px solid white;
     height: 100vh;
+    margin-left: 5px;
 }
 
 .info > p {

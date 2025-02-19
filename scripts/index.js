@@ -179,6 +179,8 @@ let Item = function (name, description, img, price, func, curr = 1) {
                 this.func(1);
             }
         }
+
+        updateCPS();
     }
 }
 
@@ -344,6 +346,11 @@ function upgradeTo(tank, img) {
     l('tank').setAttribute("onmousedown", "tankClick()");
 }
 
+function updateCPS() {
+    let cps = (crew * 10) + (consumables * 5) + (equipment * 20);
+    l('credit-rate').innerHTML = 'Credits/Second: ' + cps;
+}
+
 let Main = function () {
     if (credits >= 50000 && !gold_unlocked) {
         gold_unlocked = true;
@@ -380,9 +387,6 @@ let Main = function () {
 
         if (upgrade_available && l("upgradeIcon").classList.contains("na-s")) l("upgradeIcon").classList.remove("na-s");
     }
-
-    let cps = (crew * 10) + (consumables * 5) + (equipment * 20);
-    l('credit-rate').innerHTML = 'Credits/Second: ' + cps;
 
     creditsDisplay += (credits - creditsDisplay) * 0.5;
     l('credit-c').innerHTML = Math.round(creditsDisplay);
