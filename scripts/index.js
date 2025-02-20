@@ -395,9 +395,9 @@ let Load = function () {
                 </div>
     `;
   l("main-header").innerText = "Your Current Tanks";
+  l("tank").setAttribute("onmousedown", "tankClick()");
   l("current-tier").innerText =
     "Your current tier is: " + romanNumeral(currentTier);
-  l("tank").setAttribute("onmousedown", "tankClick()");
 
   Main();
 };
@@ -467,7 +467,8 @@ function upgradeTo(tank, img) {
   credits -= upgradeCost;
   upgradeCost = upgradeCost >= 6100000 ? 6100000 : upgradeCost * 1.5;
 
-  l("current-tier").innerText = "Your current tier is: " + currentTier;
+  l("current-tier").innerText =
+    "Your current tier is: " + romanNumeral(currentTier);
   l("tank").setAttribute("onmousedown", "tankClick()");
 }
 

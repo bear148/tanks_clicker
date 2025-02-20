@@ -51,12 +51,12 @@ h6 {
 }
 
 #middle {
-    border-bottom: 1px solid white;
     width: 100%;
     display: flex;
     flex-flow:column nowrap;
     background-color: rgba(0, 0, 0, 0.2);
-    height: 100vh;
+    height: fit-content;
+    overflow-y: scroll;
 }
 
 #current-tier,
@@ -133,12 +133,14 @@ div #gold-c {
 #buyConsumable,
 #buyCrew {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-start;
+    flex-flow: column nowrap;
     background-image: url('/assets/icons/brothers_plus.png');
     background-size: contain;
     background-size: 40px;
-    height: 40px;
+    background-position: right;
+    height: fit-content;
 }
 
 #buyConsumable {
@@ -233,9 +235,8 @@ hr {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-.tooltip {
-    margin-left: 25px;
-    margin-right: 25px;
+.store-item > p {
+	margin-bottom: 5px;
 }
 
 .coupon {
