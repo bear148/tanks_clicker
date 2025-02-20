@@ -5,8 +5,8 @@
 	"editor.formatOnPaste": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[javascript]": {
-		"editor.defaultFormatter": "nesterenok.js-beautify-extentions"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"editor.fontSize": 15,
-  	"editor.fontLigatures": true
+	"editor.fontLigatures": true
 }

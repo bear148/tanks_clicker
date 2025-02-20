@@ -1,25 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
-body {
-    display: flex;
-    flex-flow: row nowrap;
-    overflow-y: hidden;
+html {
+	height: 100vh;
 }
 
 body {
-    height: 100%;
-    background-image: url(/assets/img/back2.png);
-    background-size: cover;
-    background-position: center;
+	height: 100vh;
+	background-image: url(/assets/img/back2.png);
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	flex-flow: row nowrap;
+	overflow: hidden;
 }
 
 *:not(ul) {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: white;
-    background-repeat: no-repeat;
-    margin: 0;
-    padding: 0;
-    user-select: none;
+	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+		"Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+	color: white;
+	background-repeat: no-repeat;
+	margin: 0;
+	padding: 0;
+	user-select: none;
 }
 
 h1,
@@ -28,211 +30,211 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: 100;
+	font-weight: 100;
 }
 
 #store {
-    border: 1px solid white;
-    background-color: rgba(0, 0, 0, 0.2);
+	border: 1px solid white;
+	background-color: rgba(0, 0, 0, 0.2);
 }
 
 #tank {
-    padding: 15px;
-    height: 100px;
-    align-self: center;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgb(35, 35, 35);
-    border: 1px solid maroon;
-    max-width: 1200px;
-    min-width: 300px;
+	padding: 15px;
+	height: 100px;
+	align-self: center;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	background-color: rgb(35, 35, 35);
+	border: 1px solid maroon;
+	max-width: 1200px;
+	min-width: 300px;
 }
 
 #middle {
-    width: 100%;
-    display: flex;
-    flex-flow:column nowrap;
-    background-color: rgba(0, 0, 0, 0.2);
-    height: fit-content;
-    overflow-y: scroll;
+	width: 100%;
+	display: flex;
+	flex-flow: column nowrap;
+	background-color: rgba(0, 0, 0, 0.2);
+	overflow-y: auto;
+	scrollbar-width: none;
 }
 
 #current-tier,
 .middle-title,
 #store-title {
-    background-color: rgba(0, 0, 0, 0.427);
-    width: 100%;
-    text-align: center;
-    margin-bottom: 25px;
-    color: gold;
+	background-color: rgba(0, 0, 0, 0.427);
+	width: 100%;
+	text-align: center;
+	margin-bottom: 25px;
+	color: gold;
 }
 
 .selectFlag,
 #tankCountry {
-    width: 64px;
+	width: 64px;
 }
 
 #tankName {
-    font-size: 15px;
+	font-size: 15px;
 }
 
 #tank *:not(h2) {
-    user-select: none;
+	user-select: none;
 }
 
 #left {
-    display: flex;
-    flex-flow: column nowrap;
-    width: fit-content;
-    font-size: 15px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-right: 1px solid white;
-    height: 100vh;
-    margin-left: 5px;
+	display: flex;
+	flex-flow: column nowrap;
+	width: fit-content;
+	font-size: 15px;
+	background-color: rgba(0, 0, 0, 0.2);
+	border-right: 1px solid white;
+	height: 100vh;
+	margin-left: 5px;
 }
 
 .info > p {
-    color: silver;
+	color: silver;
 }
 
 .info > a {
-    color: powderblue;
+	color: powderblue;
 }
 
 div #credit-c {
-    color: silver;
+	color: silver;
 }
 
 div #gold-c {
-    color: gold;
+	color: gold;
 }
 
 #count {
-    color: gold;
-    padding-left: 55px;
+	color: gold;
+	padding-left: 55px;
 }
 
 #popups {
-    pointer-events: none;
+	pointer-events: none;
 }
 
 #store > div {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .equipment,
 .consumable,
 .crew {
-    width: 26px;
-    height: 26px;
+	width: 26px;
+	height: 26px;
 }
 
 #buyEquipment,
 #buyConsumable,
 #buyCrew {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
-    flex-flow: column nowrap;
-    background-image: url('/assets/icons/brothers_plus.png');
-    background-size: contain;
-    background-size: 40px;
-    background-position: right;
-    height: fit-content;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+	flex-flow: column nowrap;
+	background-image: url("/assets/icons/brothers_plus.png");
+	background-size: contain;
+	background-size: 40px;
+	background-position: right;
+	height: fit-content;
 }
 
 #buyConsumable {
-    background-image: url(/assets/icons/cola_plus.png);
+	background-image: url(/assets/icons/cola_plus.png);
 }
 
 #buyEquipment {
-    background-image: url("/assets/icons/vents_plus.png");
+	background-image: url("/assets/icons/vents_plus.png");
 }
 
 #buyConsumable > p,
 #buyEquipment > p,
 #buyCrew > p {
-    color: lime;
-    text-align: center;
+	color: lime;
+	text-align: center;
 }
 
 #crew-members {
-    display: flex;
-    flex-flow: row wrap;
+	display: flex;
+	flex-flow: row wrap;
 }
 
 .na {
-    color: red !important;
+	color: red !important;
 }
 
 .na-s {
-    display: none;
+	display: none;
 }
 
 #gold-boosters {
-    display: flex;
-    flex-flow: row wrap;
+	display: flex;
+	flex-flow: row wrap;
 }
 
 .gold-boost {
-    background-image: url(/assets/items/gold_booster.webp);
-    background-size: contain;
-    width: 32px;
-    height: 32px;
+	background-image: url(/assets/items/gold_booster.webp);
+	background-size: contain;
+	width: 32px;
+	height: 32px;
 }
 
 .gold-pop-up {
-    color: gold;
+	color: gold;
 }
 
 #buyGold-Booster {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url(/assets/items/gold_booster.webp);
-    background-size: contain;
-    width: 16px;
-    height: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-image: url(/assets/items/gold_booster.webp);
+	background-size: contain;
+	width: 16px;
+	height: 16px;
 }
 
 #buyGold-Booster > p {
-    color: lime;
-    padding-left: 48px;
+	color: lime;
+	padding-left: 48px;
 }
 
 #right {
-    border-left: 1px solid white;
-    height: 100vh;
+	border-left: 1px solid white;
+	height: 100vh;
 }
 
 #tankIcon {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
 }
 
 .upgradeTankIcon {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
+	width: 60px;
+	height: 60px;
+	object-fit: cover;
 }
 
 hr {
-    margin-top: 15px;
-    margin-bottom: 15px;
+	margin-top: 15px;
+	margin-bottom: 15px;
 }
 
 #country-select {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-around;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-around;
 }
 
 .store-item {
-    width: 600px;
-    background-color: rgba(0, 0, 0, 0.3);
+	width: 600px;
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 .store-item > p {
@@ -240,43 +242,43 @@ hr {
 }
 
 .coupon {
-    margin: 100px;
+	margin: 100px;
 }
 
 #tankStatus {
-    align-self: flex-end;
+	align-self: flex-end;
 }
 
 #tankStatus:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 #upgradeIcon {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .status-image {
-    width: 32px;
-    height: 32px;
+	width: 32px;
+	height: 32px;
 }
 
 #version {
-    color: silver;
+	color: silver;
 }
 
 figcaption {
-    font-size: 15px;
+	font-size: 15px;
 }
 
 #reward-tank-shop {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
 }
 
 #reward-tank-shop > h2,
 #reward-tank-shop > h3 {
-    color: red;
-    font-weight: bold;
+	color: red;
+	font-weight: bold;
 }
