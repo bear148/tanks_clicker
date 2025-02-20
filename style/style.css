@@ -75,7 +75,7 @@ h6 {
 }
 
 #tankName {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 #tank *:not(h2) {
@@ -86,7 +86,7 @@ h6 {
     display: flex;
     flex-flow: column nowrap;
     width: fit-content;
-    font-size: 16px;
+    font-size: 15px;
     background-color: rgba(0, 0, 0, 0.2);
     border-right: 1px solid white;
     height: 100vh;
@@ -264,7 +264,7 @@ hr {
 }
 
 figcaption {
-    font-size: 12px;
+    font-size: 15px;
 }
 
 #reward-tank-shop {
