@@ -91,6 +91,10 @@ let crewSkillImages = [
 	"virtuoso.png",
 ];
 
+function randomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 function l(str) {
 	return document.getElementById(str);
 }
@@ -334,7 +338,7 @@ function createItems() {
 		1000,
 		function (buy) {
 			if (buy) crew++;
-			l("buyCrewCost").innerHTML = this.price;
+			l("buyCrewCost").innerHTML = `${this.price} (${crew})`;
 			l("crew-members").innerHTML += `<img class="crew" src="${
 				AssetPaths[2]
 			}${randomImage(crewSkillImages)}"></img>`;
@@ -364,7 +368,7 @@ function createItems() {
 				consumables++;
 				gold_boosters += 0.2;
 			}
-			l("buyConsumableCost").innerHTML = this.price;
+			l("buyConsumableCost").innerHTML = `${this.price} (${consumables})`;
 			l("consumables").innerHTML +=
 				'<img class="consumable" src="/assets/items/cola.png"></img>';
 		}
@@ -377,7 +381,7 @@ function createItems() {
 		1750,
 		function (buy) {
 			if (buy) equipment++;
-			l("buyEquipmentCost").innerHTML = this.price;
+			l("buyEquipmentCost").innerHTML = `${this.price} (${equipment})`;
 			l("equipment").innerHTML += `<img class="equipment" src="${
 				AssetPaths[1]
 			}${randomImage(equipmentImages)}"></img>`;
@@ -408,7 +412,7 @@ let PopUp = function (el, str) {
 	this.el = el;
 	this.str = str;
 	this.life = 0;
-	this.offx = Math.floor(Math.random() * 20 - 10);
+	this.offx = Math.floor(Math.random() * 100 - 50);
 	this.offy = Math.floor(Math.random() * 20 - 10);
 	popUps.push(this);
 };

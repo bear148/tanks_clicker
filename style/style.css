@@ -93,6 +93,7 @@ h6 {
 	border-right: 1px solid white;
 	height: 100vh;
 	margin-left: 5px;
+	max-width: 343px;
 }
 
 .info > p {
@@ -233,7 +234,7 @@ hr {
 }
 
 .store-item {
-	width: 600px;
+	width: 450px;
 	background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -281,4 +282,8 @@ figcaption {
 #reward-tank-shop > h3 {
 	color: red;
 	font-weight: bold;
+}
+
+#main-header {
+	position: sticky;
 }
