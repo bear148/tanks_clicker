@@ -7,6 +7,7 @@ going to expand upon it in my own tank themed game.
 
 - Michael S. Jan 22. 2025
 */
+
 let countElement = document.getElementById("count");
 let currentCountry = null;
 let currentTechTree = null;
@@ -25,6 +26,9 @@ let T = 0;
 
 let popUps = [];
 let popUpsEnabled = false;
+
+let notifications = [];
+let nID = [];
 
 let crew = 0;
 let consumables = 0;
@@ -92,7 +96,7 @@ let crewSkillImages = [
 ];
 
 function randomInt(max) {
-  return Math.floor(Math.random() * max);
+	return Math.floor(Math.random() * max);
 }
 
 function l(str) {
@@ -338,7 +342,7 @@ function createItems() {
 		1000,
 		function (buy) {
 			if (buy) crew++;
-			l("buyCrewCost").innerHTML = `${this.price} (${crew})`;
+			l("buyCrewCost").innerHTML = `(${crew}) ${this.price}`;
 			l("crew-members").innerHTML += `<img class="crew" src="${
 				AssetPaths[2]
 			}${randomImage(crewSkillImages)}"></img>`;
@@ -354,6 +358,18 @@ function createItems() {
 			if (buy) gold_boosters++;
 			l("buyGold-BoosterCost").innerHTML = this.price;
 			l("gold-boosters").innerHTML += '<div class="gold-boost"></div>';
+
+			if (crew == 100) {
+				if (!nID.includes(3)) {
+					new Notification(
+						"100 Crew Purchased!",
+						"You've got a lot of crew members now...",
+						"lime",
+						null,
+						3
+					).run();
+				}
+			}
 		},
 		2
 	);
@@ -368,9 +384,21 @@ function createItems() {
 				consumables++;
 				gold_boosters += 0.2;
 			}
-			l("buyConsumableCost").innerHTML = `${this.price} (${consumables})`;
+			l("buyConsumableCost").innerHTML = `(${consumables}) ${this.price}`;
 			l("consumables").innerHTML +=
 				'<img class="consumable" src="/assets/items/cola.png"></img>';
+
+			if (consumables == 100) {
+				if (!nID.includes(4)) {
+					new Notification(
+						"100 Consumables Purchased!",
+						"You've got a lot of consumables now...",
+						"lime",
+						null,
+						4
+					).run();
+				}
+			}
 		}
 	);
 
@@ -381,10 +409,22 @@ function createItems() {
 		1750,
 		function (buy) {
 			if (buy) equipment++;
-			l("buyEquipmentCost").innerHTML = `${this.price} (${equipment})`;
+			l("buyEquipmentCost").innerHTML = `(${equipment}) ${this.price}`;
 			l("equipment").innerHTML += `<img class="equipment" src="${
 				AssetPaths[1]
 			}${randomImage(equipmentImages)}"></img>`;
+
+			if (equipment == 100) {
+				if (!nID.includes(2)) {
+					new Notification(
+						"100 Equipment Purchased!",
+						"You've got a lot of equipment now...",
+						"lime",
+						null,
+						2
+					).run();
+				}
+			}
 		}
 	);
 }
@@ -412,10 +452,47 @@ let PopUp = function (el, str) {
 	this.el = el;
 	this.str = str;
 	this.life = 0;
-	this.offx = Math.floor(Math.random() * 100 - 50);
+	this.offx = Math.floor(Math.random() * 120 - 50);
 	this.offy = Math.floor(Math.random() * 20 - 10);
 	popUps.push(this);
 };
+
+class Notification {
+	constructor(text, desc, color, icon, id) {
+		this.text = text;
+		this.color = color;
+		this.icon = icon;
+		this.desc = desc;
+		this.notifel = l('notifications');
+		this.active = true;
+		this.id = id
+	}
+
+	run() {
+		this.active = true;
+
+		let date = new Date();
+
+		if (notifications.length == 6) {
+			closeNote(document.getElementsByClassName("notification")[0]);
+		}
+
+		notifications.push(this);
+		nID.push(this.id);
+		this.notifel.innerHTML += `
+		<div class="notification" onmousedown="closeNote(this)">
+			<h3 style="color:${this.color}">${this.text}</h3>
+			<p>${this.desc}</p>
+			<p class="timestamp">${date.toLocaleTimeString()}</p>
+		</div>
+		`
+	}
+}
+
+function closeNote(e) {
+	e.remove();
+	notifications.shift();
+}
 
 function tankClick() {
 	credits += credit_rate;
@@ -489,8 +566,10 @@ let Main = function () {
 		gold_unlocked = true;
 	}
 
-	if (credits >= upgradeCost && !upgrade_available && currentTier != 9) {
+	if (credits >= upgradeCost && currentTier != 9) {
 		upgrade_available = true;
+	} else {
+		l("upgradeIcon").classList.add("na-s");
 	}
 
 	let str = "";
@@ -537,8 +616,9 @@ let Main = function () {
 		if (gold_unlocked && T % Math.ceil(150 / gold_boosters) == 0)
 			addGold(10, "gold");
 
-		if (upgrade_available && l("upgradeIcon").classList.contains("na-s"))
+		if (upgrade_available && l("upgradeIcon").classList.contains("na-s")) {
 			l("upgradeIcon").classList.remove("na-s");
+		}
 	}
 
 	creditsDisplay += (credits - creditsDisplay) * 0.5;

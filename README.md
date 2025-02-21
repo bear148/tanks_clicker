@@ -4,6 +4,17 @@ Tanks clicker is a simple idle clicking game inspired by World of Tanks. As of r
 
 ## Changelog
 
+### *v0.0.15*
+
+- Achievments added for buying 100 crew, consumables, or equipment.
+  - This is for future testing of a notifications feature.
+- Count added for each upgrade to tell you how much of each you have.
+- Premium shop base added.
+
+<details>
+<summary>Previous Patches</summary>
+<br>
+
 ### *v0.0.14*
 
 - Tier 9 added to the USSR tech tree.
@@ -22,10 +33,6 @@ Tanks clicker is a simple idle clicking game inspired by World of Tanks. As of r
   - IX:   9
   - X:    10
 - Changelog and Github access from the main home page.
-
-<details>
-<summary>Previous Patches</summary>
-<br>
 
 ### *v0.0.13*
 
