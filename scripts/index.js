@@ -26,11 +26,9 @@ let currentCountry = null;
 let currentTechTree = null;
 let currentTier = 1;
 
-let credits = 0;
 let creditsDisplay = 0;
 let credit_rate = 10;
 
-let gold = 0;
 let gold_rate = 1;
 let gold_unlocked = false;
 let goldDisplay = 0;
@@ -43,18 +41,21 @@ let popUpsEnabled = false;
 let notifications = [];
 let nID = [];
 
-let crew = 0;
-let consumables = 0;
-let equipment = 0;
-
-let gold_boosters = 1;
-
 let upgrade_available = false;
 let upgrading = false;
 let upgradeCost = 100000;
 
 let premiumStoreUnlocked = false;
 let rewardStoreUnlocked = false;
+
+let Inventory = {
+    credits: 0,
+    gold: 0,
+    crew: 0,
+    consumables: 0,
+    equipment: 0,
+    goldBoosters: 1
+}
 
 let items = [];
 
@@ -214,14 +215,14 @@ class Item {
 
     Buy() {
         if (this.c == 1) {
-            if (credits >= this.price) {
-                credits -= this.price;
+            if (Inventory.credits >= this.price) {
+                Inventory.credits -= this.price;
                 this.price = Math.ceil(this.price * 1.02);
                 this.func(1);
             }
         } else if (this.c == 2) {
-            if (gold >= this.price) {
-                gold -= this.price;
+            if (Inventory.gold >= this.price) {
+                Inventory.gold -= this.price;
                 this.price = Math.ceil(this.price * 1.06);
                 this.func(1);
             }
@@ -421,11 +422,11 @@ function createItems() {
         null,
         1000,
         function (buy) {
-            if (buy) crew++;
-            CREWCOST_ELEMENT.innerHTML = `(${crew}) ${this.price}`;
+            if (buy) Inventory.crew++;
+            CREWCOST_ELEMENT.innerHTML = `(${Inventory.crew}) ${this.price}`;
             CREWMEMBERS_CONTAINER.innerHTML += `<img class="crew" src="${AssetPaths[2]}${randomImage(crewSkillImages)}"></img>`;
 
-            if (crew == 100) {
+            if (Inventory.crew == 100) {
                 if (!nID.includes(3)) {
                     new UserNotification(
                         "100 Crew Purchased!",
@@ -445,7 +446,7 @@ function createItems() {
         null,
         50,
         function (buy) {
-            if (buy) gold_boosters++;
+            if (buy) Inventory.goldBoosters++;
             GOLDBOOSTERSCOST_ELEMENT.innerHTML = this.price;
             GOLDBOOSTERS_CONTAINER.innerHTML += '<div class="gold-boost"></div>';
         },
@@ -459,13 +460,13 @@ function createItems() {
         750,
         function (buy) {
             if (buy) {
-                consumables++;
-                gold_boosters += 0.2;
+                Inventory.consumables++;
+                Inventory.goldBoosters += 0.2;
             }
-            CONSUMABLECOST_ELEMENT.innerHTML = `(${consumables}) ${this.price}`;
+            CONSUMABLECOST_ELEMENT.innerHTML = `(${Inventory.consumables}) ${this.price}`;
             CONSUMABLES_CONTAINER.innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
 
-            if (consumables == 100) {
+            if (Inventory.consumables == 100) {
                 if (!nID.includes(4)) {
                     new UserNotification(
                         "100 Consumables Purchased!",
@@ -485,11 +486,11 @@ function createItems() {
         null,
         1750,
         function (buy) {
-            if (buy) equipment++;
-            EQUIPMENTCOST_ELEMENT.innerHTML = `(${equipment}) ${this.price}`;
+            if (buy) Inventory.equipment++;
+            EQUIPMENTCOST_ELEMENT.innerHTML = `(${Inventory.equipment}) ${this.price}`;
             EQUIPMENT_CONTAINER.innerHTML += `<img class="equipment" src="${AssetPaths[1]}${randomImage(equipmentImages)}"></img>`;
 
-            if (equipment == 100) {
+            if (Inventory.equipment == 100) {
                 if (!nID.includes(2)) {
                     new UserNotification(
                         "100 Equipment Purchased!",
@@ -523,19 +524,19 @@ let Load = function () {
 };
 
 function tankClick() {
-    credits += credit_rate;
+    Inventory.credits += credit_rate;
     if (popUps.length < 260 && popUpsEnabled)
         new PopUp("tank", "+" + Math.round(credit_rate));
 }
 
 function addCredits(howmany, el) {
-    credits += howmany;
+    Inventory.credits += howmany;
     if (el && popUps.length < 250 && popUpsEnabled)
         new PopUp(el, "+" + howmany);
 }
 
 function addGold(howmany, el) {
-    gold += howmany;
+    Inventory.gold += howmany;
 }
 
 function upgradeTankMenu() {
@@ -576,7 +577,7 @@ function upgradeTo(tank, img) {
 
     credit_rate = credit_rate * 1.2;
 
-    credits -= upgradeCost;
+    Inventory.credits -= upgradeCost;
     upgradeCost = upgradeCost >= 6100000 ? 6100000 : upgradeCost * 1.5;
 
     l("current-tier").innerText =
@@ -604,12 +605,12 @@ function upgradeTo(tank, img) {
 }
 
 function updateCPS() {
-    let cps = crew * 10 + consumables * 5 + equipment * 20;
+    let cps = Inventory.crew * 10 + Inventory.consumables * 5 + Inventory.equipment * 20;
     l("credit-rate").innerHTML = "Credits/Second: " + cps;
 }
 
 let Main = function () {
-    if (credits >= 50000 && !gold_unlocked) {
+    if (Inventory.credits >= 50000 && !gold_unlocked) {
         gold_unlocked = true;
     }
 
@@ -641,32 +642,32 @@ let Main = function () {
 
     if (!upgrading) {
         for (let i in items) {
-            if (credits >= items[i].price && items[i].c == 1)
+            if (Inventory.credits >= items[i].price && items[i].c == 1)
                 l("buy" + items[i].name + "Cost").className = "";
-            else if (gold >= items[i].price && items[i].c == 2)
+            else if (Inventory.gold >= items[i].price && items[i].c == 2)
                 l("buy" + items[i].name + "Cost").className = "";
             else l("buy" + items[i].name + "Cost").className = "na";
         }
 
-        if (crew && T % Math.ceil(150 / crew) == 0)
+        if (Inventory.crew && T % Math.ceil(150 / Inventory.crew) == 0)
             addCredits(50, "crew-members");
-        if (consumables && T % Math.ceil(150 / consumables) == 0)
+        if (Inventory.consumables && T % Math.ceil(150 / Inventory.consumables) == 0)
             addCredits(25, "consumables");
-        if (equipment && T % Math.ceil(150 / equipment) == 0)
+        if (Inventory.equipment && T % Math.ceil(150 / Inventory.equipment) == 0)
             addCredits(100, "equipment");
-        if (gold_unlocked && T % Math.ceil(150 / gold_boosters) == 0)
+        if (Inventory.gold_unlocked && T % Math.ceil(150 / Inventory.gold_boosters) == 0)
             addGold(10, "gold");
 
-        if (credits >= upgradeCost && currentTier != 10) {
+        if (Inventory.credits >= upgradeCost && currentTier != 10) {
             upgrade_available = true;
             l("upgradeIcon").classList.remove("na-s");
         }
     }
 
-    creditsDisplay += (credits - creditsDisplay) * 0.5;
+    creditsDisplay += (Inventory.credits - creditsDisplay) * 0.5;
     l("credit-c").innerHTML = Math.round(creditsDisplay);
 
-    goldDisplay += (gold - goldDisplay) * 0.5;
+    goldDisplay += (Inventory.gold - goldDisplay) * 0.5;
     l("gold-c").innerHTML = Math.round(goldDisplay);
 
     T++;
