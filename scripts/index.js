@@ -54,7 +54,7 @@ let Inventory = {
     crew: 0,
     consumables: 0,
     equipment: 0,
-    goldBoosters: 1
+    goldBoosters: 1,
 }
 
 let items = [];
@@ -131,6 +131,17 @@ function randomImage(imageArray) {
     return imageArray[
         Math.round(Math.random() * (imageArray.length - 1 - 0) + 0)
     ];
+}
+
+function loadData() {
+    Inventory = JSON.parse(localStorage.getItem("playerData")) || {
+        credits: 0,
+        gold: 0,
+        crew: 0,
+        consumables: 0,
+        equipment: 0,
+        goldBoosters: 1,
+    };
 }
 
 function romanNumeral(n) {
@@ -506,6 +517,7 @@ function createItems() {
 }
 
 let Load = function () {
+    loadData();
     createItems();
 
     MAINTANK_ELEMENT.innerHTML = `
@@ -673,3 +685,9 @@ let Main = function () {
     T++;
     setTimeout(Main, 1000 / 30);
 };
+
+/* Save Game */
+addEventListener("pagehide", (event) => {
+    console.log("Saving Game...");
+    localStorage.setItem("playerData", JSON.stringify(Inventory));
+});

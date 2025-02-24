@@ -6,6 +6,6 @@
 	},
 	"editor.fontSize": 14,
 	"editor.fontLigatures": true,
-	"editor.fontFamily": "Monaspace Argon",
+	"editor.fontFamily": "'Monaspace Argon Var'",
 	"workbench.colorTheme": "Hyper Term Black",
 }
