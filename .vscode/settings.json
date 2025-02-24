@@ -1,12 +1,10 @@
 {
-	"prettier.tabWidth": 4,
-	"prettier.useTabs": true,
 	"editor.formatOnSave": true,
 	"editor.formatOnPaste": true,
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[javascript]": {
 		"editor.defaultFormatter": "vscode.typescript-language-features"
 	},
-	"editor.fontSize": 15,
-	"editor.fontLigatures": true
+	"editor.fontSize": 14,
+	"editor.fontLigatures": true,
+	"editor.fontFamily": "Monaspace Argon",
 }
