@@ -7,4 +7,5 @@
 	"editor.fontSize": 14,
 	"editor.fontLigatures": true,
 	"editor.fontFamily": "Monaspace Argon",
+	"workbench.colorTheme": "Hyper Term Black",
 }
