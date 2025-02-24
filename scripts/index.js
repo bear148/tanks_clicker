@@ -21,6 +21,13 @@ const GOLDBOOSTERS_CONTAINER = l("gold-boosters");
 
 const MAINTANK_ELEMENT = l("tank");
 
+const POPUP_CONTAINER = l("popups");
+
+const CREDIT_COUNTER = l("credit-c");
+const GOLD_COUNTER = l("gold-c");
+
+const UPGRADE_ICON = l("upgradeIcon");
+
 let countElement = document.getElementById("count");
 let currentCountry = null;
 let currentTechTree = null;
@@ -39,7 +46,6 @@ let popUps = [];
 let popUpsEnabled = false;
 
 let notifications = [];
-let nID = [];
 
 let upgrade_available = false;
 let upgrading = false;
@@ -55,6 +61,7 @@ let Inventory = {
     consumables: 0,
     equipment: 0,
     goldBoosters: 1,
+    nID: []
 }
 
 let items = [];
@@ -123,9 +130,9 @@ function l(str) {
     return document.getElementById(str);
 }
 
-l("popUpsEnabled").addEventListener("change", () => {
-    popUpsEnabled = popUpsEnabled ? false : true;
-});
+// l("popUpsEnabled").addEventListener("change", () => {
+//     popUpsEnabled = popUpsEnabled ? false : true;
+// });
 
 function randomImage(imageArray) {
     return imageArray[
@@ -141,7 +148,11 @@ function loadData() {
         consumables: 0,
         equipment: 0,
         goldBoosters: 1,
+        nID: []
     };
+
+    updateUI();
+    updateCPS();
 }
 
 function romanNumeral(n) {
@@ -247,16 +258,16 @@ let Buy = function (i) {
     items[i].Buy();
 };
 
-class PopUp {
-    constructor(el, str) {
-        this.el = el;
-        this.str = str;
-        this.life = 0;
-        this.offx = Math.floor(Math.random() * 120 - 50);
-        this.offy = Math.floor(Math.random() * 20 - 10);
-        popUps.push(this);
-    }
-}
+// class PopUp {
+//     constructor(el, str) {
+//         this.el = el;
+//         this.str = str;
+//         this.life = 0;
+//         this.offx = Math.floor(Math.random() * 120 - 50);
+//         this.offy = Math.floor(Math.random() * 20 - 10);
+//         popUps.push(this);
+//     }
+// }
 
 class UserNotification {
     constructor(text, desc, color, icon, id) {
@@ -279,7 +290,7 @@ class UserNotification {
         }
 
         notifications.push(this);
-        nID.push(this.id);
+        Inventory.nID.push(this.id);
         this.notifel.innerHTML += `
 		<div class="notification" onmousedown="closeNote(this)">
             <img class="n-icon" src="${this.icon}">
@@ -433,12 +444,15 @@ function createItems() {
         null,
         1000,
         function (buy) {
-            if (buy) Inventory.crew++;
+            if (buy) {
+                Inventory.crew++;
+            }
+
             CREWCOST_ELEMENT.innerHTML = `(${Inventory.crew}) ${this.price}`;
             CREWMEMBERS_CONTAINER.innerHTML += `<img class="crew" src="${AssetPaths[2]}${randomImage(crewSkillImages)}"></img>`;
 
             if (Inventory.crew == 100) {
-                if (!nID.includes(3)) {
+                if (!Inventory.nID.includes(3)) {
                     new UserNotification(
                         "100 Crew Purchased!",
                         "You've got a lot of crew members now...",
@@ -478,7 +492,7 @@ function createItems() {
             CONSUMABLES_CONTAINER.innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
 
             if (Inventory.consumables == 100) {
-                if (!nID.includes(4)) {
+                if (!Inventory.nID.includes(4)) {
                     new UserNotification(
                         "100 Consumables Purchased!",
                         "You've got a lot of consumables now...",
@@ -497,12 +511,14 @@ function createItems() {
         null,
         1750,
         function (buy) {
-            if (buy) Inventory.equipment++;
+            if (buy) {
+                Inventory.equipment++;
+            }
             EQUIPMENTCOST_ELEMENT.innerHTML = `(${Inventory.equipment}) ${this.price}`;
             EQUIPMENT_CONTAINER.innerHTML += `<img class="equipment" src="${AssetPaths[1]}${randomImage(equipmentImages)}"></img>`;
 
             if (Inventory.equipment == 100) {
-                if (!nID.includes(2)) {
+                if (!Inventory.nID.includes(2)) {
                     new UserNotification(
                         "100 Equipment Purchased!",
                         "You've got a lot of equipment now...",
@@ -537,14 +553,14 @@ let Load = function () {
 
 function tankClick() {
     Inventory.credits += credit_rate;
-    if (popUps.length < 260 && popUpsEnabled)
-        new PopUp("tank", "+" + Math.round(credit_rate));
+    // if (popUps.length < 260 && popUpsEnabled)
+    //     new PopUp("tank", "+" + Math.round(credit_rate));
 }
 
 function addCredits(howmany, el) {
     Inventory.credits += howmany;
-    if (el && popUps.length < 250 && popUpsEnabled)
-        new PopUp(el, "+" + howmany);
+    // if (el && popUps.length < 250 && popUpsEnabled)
+    //     new PopUp(el, "+" + howmany);
 }
 
 function addGold(howmany, el) {
@@ -621,36 +637,44 @@ function updateCPS() {
     l("credit-rate").innerHTML = "Credits/Second: " + cps;
 }
 
+function updateUI() {
+    creditsDisplay += (Inventory.credits - creditsDisplay) * 0.5;
+    CREDIT_COUNTER.innerHTML = Math.round(creditsDisplay);
+
+    goldDisplay += (Inventory.gold - goldDisplay) * 0.5;
+    GOLD_COUNTER.innerHTML = Math.round(goldDisplay);
+
+    // let str = "";
+    // for (let i in popUps) {
+    //     let rect = l(popUps[i].el).getBoundingClientRect();
+    //     let x = Math.floor((rect.left + rect.right) / 2 + popUps[i].offx) - 20;
+    //     let y =
+    //         Math.floor(
+    //             (rect.top + rect.bottom) / 2 -
+    //             Math.pow(popUps[i].life / 100, 0.5) * 100 +
+    //             popUps[i].offy
+    //         ) - 30;
+    //     let opacity = 1 - (Math.max(popUps[i].life, 80) - 80) / 20;
+    //     str +=
+    //         '<div class="pop" style="position:absolute;left:' +
+    //         x +
+    //         "px;top:" +
+    //         y +
+    //         "px;opacity:" +
+    //         opacity +
+    //         ';">' +
+    //         popUps[i].str +
+    //         "</div>";
+    //     popUps[i].life += 2;
+    //     if (popUps[i].life >= 100) popUps.splice(i, 1);
+    // }
+    // POPUP_CONTAINER.innerHTML = str;
+}
+
 let Main = function () {
     if (Inventory.credits >= 50000 && !gold_unlocked) {
         gold_unlocked = true;
     }
-
-    let str = "";
-    for (let i in popUps) {
-        let rect = l(popUps[i].el).getBoundingClientRect();
-        let x = Math.floor((rect.left + rect.right) / 2 + popUps[i].offx) - 20;
-        let y =
-            Math.floor(
-                (rect.top + rect.bottom) / 2 -
-                Math.pow(popUps[i].life / 100, 0.5) * 100 +
-                popUps[i].offy
-            ) - 30;
-        let opacity = 1 - (Math.max(popUps[i].life, 80) - 80) / 20;
-        str +=
-            '<div class="pop" style="position:absolute;left:' +
-            x +
-            "px;top:" +
-            y +
-            "px;opacity:" +
-            opacity +
-            ';">' +
-            popUps[i].str +
-            "</div>";
-        popUps[i].life += 2;
-        if (popUps[i].life >= 100) popUps.splice(i, 1);
-    }
-    l("popups").innerHTML = str;
 
     if (!upgrading) {
         for (let i in items) {
@@ -672,15 +696,11 @@ let Main = function () {
 
         if (Inventory.credits >= upgradeCost && currentTier != 10) {
             upgrade_available = true;
-            l("upgradeIcon").classList.remove("na-s");
+            UPGRADE_ICON.classList.remove("na-s");
         }
     }
 
-    creditsDisplay += (Inventory.credits - creditsDisplay) * 0.5;
-    l("credit-c").innerHTML = Math.round(creditsDisplay);
-
-    goldDisplay += (Inventory.gold - goldDisplay) * 0.5;
-    l("gold-c").innerHTML = Math.round(goldDisplay);
+    updateUI();
 
     T++;
     setTimeout(Main, 1000 / 30);
