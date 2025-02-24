@@ -246,7 +246,7 @@ class PopUp {
     }
 }
 
-class Notification {
+class UserNotification {
     constructor(text, desc, color, icon, id) {
         this.text = text;
         this.color = color;
@@ -427,7 +427,7 @@ function createItems() {
 
             if (crew == 100) {
                 if (!nID.includes(3)) {
-                    new Notification(
+                    new UserNotification(
                         "100 Crew Purchased!",
                         "You've got a lot of crew members now...",
                         'lime',
@@ -467,7 +467,7 @@ function createItems() {
 
             if (consumables == 100) {
                 if (!nID.includes(4)) {
-                    new Notification(
+                    new UserNotification(
                         "100 Consumables Purchased!",
                         "You've got a lot of consumables now...",
                         'lime',
@@ -491,7 +491,7 @@ function createItems() {
 
             if (equipment == 100) {
                 if (!nID.includes(2)) {
-                    new Notification(
+                    new UserNotification(
                         "100 Equipment Purchased!",
                         "You've got a lot of equipment now...",
                         'lime',
@@ -591,7 +591,7 @@ function upgradeTo(tank, img) {
         <h2>UNLOCKED</h2>
         <h3>You have reached tier V and you now have access to the premium store.
         `
-        new Notification(
+        new UserNotification(
             "You've Unlocked the Premium Shop!",
             "The premium shop allows you to purchase premium tanks and items.",
             'lime',
