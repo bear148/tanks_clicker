@@ -276,6 +276,7 @@ figcaption {
 	font-size: 15px;
 }
 
+#premium-tank-shop,
 #reward-tank-shop {
 	display: flex;
 	flex-flow: column nowrap;
@@ -283,10 +284,14 @@ figcaption {
 	align-items: center;
 }
 
-#reward-tank-shop > h2,
-#reward-tank-shop > h3 {
+.locked > h2,
+.locked > h3 {
 	color: red;
-	font-weight: bold;
+}
+
+.unlocked > h2,
+.unlocked > h3 {
+	color: lime;
 }
 
 #main-header {
@@ -303,20 +308,30 @@ figcaption {
 
 .notification {
 	display: flex;
-	flex-flow: column nowrap;
-	justify-content: center;
+	flex-flow: row nowrap;
+	justify-content: flex-start;
+	align-items: center;
 	border: 1px solid white;
 	background-color: rgba(0, 0, 0, 0.3);
-	padding-left: 55px;
-	padding-right: 55px;
-	background-image: url('/assets/icons/lock.png');
-	background-size: 35px;
-	background-position: left;
+	padding-left: 25px;
+	padding-right: 25px;
+	width: 500px;
+	margin-bottom: 15px;
 }
 
-.notification > h3 {
+.notification:hover {
+	cursor: pointer;
+}
+
+.n-details > h3 {
 	width: 100%;
 	text-align: left;
+}
+
+.n-icon {
+	width: 35px;
+	height: 35px;
+	margin-right: 25px;
 }
 
 .timestamp {
