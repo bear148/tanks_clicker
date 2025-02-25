@@ -7,13 +7,13 @@ going to expand upon it in my own tank themed game.
 
 - Michael S. Jan 22. 2025
 */
-const CREWCOST_ELEMENT = l("buyCrewCost");
+const CREWCOST_ELEMENT = "buyCrewCost";
 const CREWMEMBERS_CONTAINER = l("crew-members");
 
-const CONSUMABLECOST_ELEMENT = l("buyConsumableCost");
+const CONSUMABLECOST_ELEMENT = "buyConsumableCost";
 const CONSUMABLES_CONTAINER = l("consumables");
 
-const EQUIPMENTCOST_ELEMENT = l("buyEquipmentCost");
+const EQUIPMENTCOST_ELEMENT = "buyEquipmentCost";
 const EQUIPMENT_CONTAINER = l("equipment");
 
 const GOLDBOOSTERSCOST_ELEMENT = l("buyGold-BoosterCost");
@@ -26,6 +26,13 @@ const POPUP_CONTAINER = l("popups");
 const CREDIT_COUNTER = "credit-c";
 const GOLD_COUNTER = "gold-c";
 
+const ENUMS = {
+    UI_BUFFER_TYPE_NONAPPEND: 1,
+    UI_BUFFER_TYPE_APPEND: 2,
+    PURCHASE_TYPE_CREDITS: 3,
+    PURCHASE_TYPE_GOLD: 4,
+}
+
 let lastTime = 0;
 let accumulatedTime = 0;
 const TIME_STEP = 1000 / 60;
@@ -35,7 +42,6 @@ let UPGRADE_ICON;
 let countElement = document.getElementById("count");
 let currentCountry = null;
 let currentTechTree = null;
-let currentTier = 1;
 
 let creditsDisplay = 0;
 let credit_rate = 10;
@@ -66,6 +72,16 @@ let Inventory = {
     equipment: 0,
     goldBoosters: 1,
     currentTank: null,
+    currentTier: 0,
+    unlocked: {
+        premiumStore: false,
+        rewardStore: false
+    },
+    prices: {
+        conPrice: 750,
+        crewPrice: 1000,
+        eqPrice: 1750,
+    },
     nID: []
 }
 
@@ -127,7 +143,10 @@ let crewSkillImages = [
     "virtuoso.png",
 ];
 
-let UI_UPDATE_BUFFER = {};
+// Default buffer state.
+let UI_UPDATE_BUFFER = {
+    'notifications': null
+};
 
 function randomInt(max) {
     return Math.floor(Math.random() * max);
@@ -136,10 +155,6 @@ function randomInt(max) {
 function l(str) {
     return document.getElementById(str);
 }
-
-// l("popUpsEnabled").addEventListener("change", () => {
-//     popUpsEnabled = popUpsEnabled ? false : true;
-// });
 
 function randomImage(imageArray) {
     return imageArray[
@@ -156,14 +171,32 @@ function loadData() {
         equipment: 0,
         goldBoosters: 1,
         currentTank: currentTechTree.t1,
+        currentTier: 0,
+        unlocked: {
+            premiumStore: false,
+            rewardStore: false
+        },
+        prices: {
+            conPrice: 750,
+            crewPrice: 1000,
+            eqPrice: 1750,
+        },
         nID: []
     };
 
     if (Inventory.currentTank == null) Inventory.currentTank = currentTechTree.t1;
 
-    appendUIBuffer("equipmentCount", Inventory.equipment);
-    appendUIBuffer("crewCount", Inventory.crew);
-    appendUIBuffer("consumableCount", Inventory.consumables);
+    appendUIBuffer("equipmentCount", Inventory.equipment, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer("crewCount", Inventory.crew, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer("consumableCount", Inventory.consumables, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+
+    appendUIBuffer(CONSUMABLECOST_ELEMENT, Inventory.prices.conPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer(CREWCOST_ELEMENT, Inventory.prices.crewPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer(EQUIPMENTCOST_ELEMENT, Inventory.prices.eqPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+
+    l("current-tier").innerText = "Your current tier is: " + romanNumeral(Inventory.currentTier + 1);
+
+    if (Inventory.currentTier == 4) unlockStore();
 
     updateCounters();
 }
@@ -238,7 +271,7 @@ class TechTree {
 }
 
 class Item {
-    constructor(name, description, img, price, func, curr = 1) {
+    constructor(name, description, img, price, func, curr) {
         this.name = name;
         this.desc = description;
         this.img = img;
@@ -249,13 +282,13 @@ class Item {
     }
 
     Buy() {
-        if (this.c == 1) {
+        if (this.c == ENUMS.PURCHASE_TYPE_CREDITS) {
             if (Inventory.credits >= this.price) {
                 Inventory.credits -= this.price;
                 this.price = Math.ceil(this.price * 1.02);
                 this.func(1);
             }
-        } else if (this.c == 2) {
+        } else if (this.c == ENUMS.PURCHASE_TYPE_GOLD) {
             if (Inventory.gold >= this.price) {
                 Inventory.gold -= this.price;
                 this.price = Math.ceil(this.price * 1.06);
@@ -275,7 +308,7 @@ class UserNotification {
         this.color = color;
         this.icon = icon;
         this.desc = desc;
-        this.notifel = l('notifications');
+        this.notifel = 'notifications';
         this.active = true;
         this.id = id
     }
@@ -291,7 +324,8 @@ class UserNotification {
 
         notifications.push(this);
         Inventory.nID.push(this.id);
-        this.notifel.innerHTML += `
+        appendUIBuffer(this.notifel,
+            `
 		<div class="notification" onmousedown="closeNote(this)">
             <img class="n-icon" src="${this.icon}">
             <div class="n-details">
@@ -300,7 +334,8 @@ class UserNotification {
                 <p class="timestamp">${date.toLocaleTimeString()}</p>\n
             </div>\n
 		</div>\n
-		`
+		`, ENUMS.UI_BUFFER_TYPE_NONAPPEND
+        );
     }
 }
 
@@ -448,7 +483,8 @@ function createItems() {
                 Inventory.crew++;
             }
 
-            CREWCOST_ELEMENT.innerHTML = `(${Inventory.crew}) ${this.price}`;
+            Inventory.prices.crewPrice = this.price;
+            document.getElementById("buyCrewCost").innerHTML = `${this.price}`;
             CREWMEMBERS_CONTAINER.innerHTML += `<img class="crew" src="${AssetPaths[2]}${randomImage(crewSkillImages)}"></img>`;
 
             if (Inventory.crew == 100) {
@@ -462,7 +498,8 @@ function createItems() {
                     ).run();
                 }
             }
-        }
+        },
+        ENUMS.PURCHASE_TYPE_CREDITS
     );
 
     new Item(
@@ -475,7 +512,7 @@ function createItems() {
             GOLDBOOSTERSCOST_ELEMENT.innerHTML = this.price;
             GOLDBOOSTERS_CONTAINER.innerHTML += '<div class="gold-boost"></div>';
         },
-        2
+        ENUMS.PURCHASE_TYPE_GOLD
     );
 
     new Item(
@@ -488,7 +525,9 @@ function createItems() {
                 Inventory.consumables++;
                 Inventory.goldBoosters += 0.2;
             }
-            CONSUMABLECOST_ELEMENT.innerHTML = `(${Inventory.consumables}) ${this.price}`;
+
+            Inventory.prices.conPrice = this.price;
+            document.getElementById("buyConsumableCost") = `${this.price}`;
             CONSUMABLES_CONTAINER.innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
 
             if (Inventory.consumables == 100) {
@@ -502,7 +541,8 @@ function createItems() {
                     ).run();
                 }
             }
-        }
+        },
+        ENUMS.PURCHASE_TYPE_CREDITS
     );
 
     new Item(
@@ -514,7 +554,9 @@ function createItems() {
             if (buy) {
                 Inventory.equipment++;
             }
-            EQUIPMENTCOST_ELEMENT.innerHTML = `(${Inventory.equipment}) ${this.price}`;
+
+            Inventory.prices.eqPrice = this.price;
+            document.getElementById("buyEquipmentCost").innerHTML = `${this.price}`;
             EQUIPMENT_CONTAINER.innerHTML += `<img class="equipment" src="${AssetPaths[1]}${randomImage(equipmentImages)}"></img>`;
 
             if (Inventory.equipment == 100) {
@@ -528,7 +570,8 @@ function createItems() {
                     ).run();
                 }
             }
-        }
+        },
+        ENUMS.PURCHASE_TYPE_CREDITS
     );
 }
 
@@ -547,11 +590,9 @@ let Load = function () {
 
     l("main-header").innerText = "Your Current Tanks";
     MAINTANK_ELEMENT.setAttribute("onmousedown", "tankClick()");
-    l("current-tier").innerText = "Your current tier is: " + romanNumeral(currentTier);
+    l("current-tier").innerText = "Your current tier is: " + romanNumeral(Inventory.currentTier + 1);
 
     UPGRADE_ICON = l("upgradeIcon");
-
-    Main();
 };
 
 function tankClick() {
@@ -570,26 +611,28 @@ function upgradeTankMenu() {
     upgrading = true;
 
     let str = "";
+    let id = 0;
 
     str += "<h2 id='tankName'>Select Your Next Tank:</h2>";
 
     MAINTANK_ELEMENT.setAttribute("onmousedown", "");
 
-    for (let t of currentTechTree.getTanks()[currentTier]) {
+    for (let t of currentTechTree.getTanks()[Inventory.currentTier + 1]) {
         str += `
         <figure>
-            <img class="upgradeTankIcon" src="${t.img}" onclick="upgradeTo('${t.name}', '${t.img}')" alt="Soviet MS-1 Tank">
+            <img class="upgradeTankIcon" src="${t.img}" onclick="upgradeTo('${t.name}', '${t.img}', '${id}')" alt="Soviet MS-1 Tank">
             <figcaption>${t.name}</figcaption>
         </figure>
         `;
+        id++;
     }
 
-    currentTier++;
+    Inventory.currentTier++;
 
     MAINTANK_ELEMENT.innerHTML = str;
 }
 
-function upgradeTo(tank, img) {
+function upgradeTo(tank, img, id) {
     MAINTANK_ELEMENT.innerHTML = `
             <h2 id="tankName">${tank}</h2>
             <img id="tankIcon" src="${img}">
@@ -607,18 +650,15 @@ function upgradeTo(tank, img) {
     Inventory.credits -= upgradeCost;
     upgradeCost = upgradeCost >= 6100000 ? 6100000 : upgradeCost * 1.5;
 
+    Inventory.currentTank = currentTechTree.getTanks()[Inventory.currentTier][parseInt(id)];
+
     l("current-tier").innerText =
-        "Your current tier is: " + romanNumeral(currentTier);
+        "Your current tier is: " + romanNumeral(Inventory.currentTier + 1);
     MAINTANK_ELEMENT.setAttribute("onmousedown", "tankClick()");
 
-    if (currentTier == 5) {
+    if (Inventory.currentTier == 4) {
         console.log("Premium Store unlocked.");
-        l('premium-tank-shop').classList.remove("locked");
-        l('premium-tank-shop').classList.add("unlocked");
-        l('premium-tank-shop').innerHTML = `
-        <h2>UNLOCKED</h2>
-        <h3>You have reached tier V and you now have access to the premium store.
-        `
+        unlockStore();
         new UserNotification(
             "You've Unlocked the Premium Shop!",
             "The premium shop allows you to purchase premium tanks and items.",
@@ -627,20 +667,32 @@ function upgradeTo(tank, img) {
             5
         ).run();
 
-        premiumStoreUnlocked = true;
+        Inventory.unlocked.premiumStore = true;
     }
 }
 
-function appendUIBuffer(key, value) {
+function unlockStore() {
+    console.log("Premium Store unlocked.");
+    l('premium-tank-shop').classList.remove("locked");
+    l('premium-tank-shop').classList.add("unlocked");
+    l('premium-tank-shop').innerHTML = `
+        <h2>UNLOCKED</h2>
+        <h3>You have reached tier V and you now have access to the premium store.
+        `;
+}
+
+function appendUIBuffer(key, value, type) {
     let element = document.getElementById(key);
-    if (element.innerText !== value) {
-        UI_UPDATE_BUFFER[key] = value;
+    if (element.innerText !== value || element.innerHTML !== value) {
+        if (type == ENUMS.UI_BUFFER_TYPE_NONAPPEND) {
+            UI_UPDATE_BUFFER[key] = value;
+        }
     }
 }
 
 function applyUIBuffer() {
     for (let key in UI_UPDATE_BUFFER) {
-        document.getElementById(key).innerText = UI_UPDATE_BUFFER[key];
+        document.getElementById(key).innerHTML = UI_UPDATE_BUFFER[key];
     }
 
     UI_UPDATE_BUFFER = {};
@@ -648,10 +700,10 @@ function applyUIBuffer() {
 
 function updateCounters() {
     creditsDisplay += (Inventory.credits - creditsDisplay) * 0.5;
-    appendUIBuffer(CREDIT_COUNTER, Math.round(creditsDisplay));
+    appendUIBuffer(CREDIT_COUNTER, Math.round(creditsDisplay), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
     goldDisplay += (Inventory.gold - goldDisplay) * 0.5;
-    appendUIBuffer(GOLD_COUNTER, Math.round(goldDisplay));
+    appendUIBuffer(GOLD_COUNTER, Math.round(goldDisplay), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 }
 
 let Main = function () {
@@ -661,9 +713,7 @@ let Main = function () {
 
     if (!upgrading) {
         for (let i in items) {
-            if (Inventory.credits >= items[i].price && items[i].c == 1)
-                l("buy" + items[i].name + "Cost").className = "";
-            else if (Inventory.gold >= items[i].price && items[i].c == 2)
+            if ((Inventory.credits >= items[i].price && items[i].c == ENUMS.PURCHASE_TYPE_CREDITS) || (Inventory.gold >= items[i].price && items[i].c == ENUMS.PURCHASE_TYPE_GOLD))
                 l("buy" + items[i].name + "Cost").className = "";
             else l("buy" + items[i].name + "Cost").className = "na";
         }
@@ -677,9 +727,9 @@ let Main = function () {
         if (Inventory.gold_unlocked && T % Math.ceil(150 / Inventory.gold_boosters) == 0)
             addGold(10);
 
-        if (Inventory.credits >= upgradeCost && currentTier != 10) {
+        if (Inventory.credits >= upgradeCost && Inventory.currentTier != 9) {
             upgrade_available = true;
-            UPGRADE_ICON.classList.remove("na-s");
+            l("upgradeIcon").classList.remove("na-s");
         }
     }
 

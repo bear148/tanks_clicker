@@ -27,13 +27,10 @@
             </div> -->
         <hr>
         <h2>Tips</h2>
-        <ul>
-            <li>Every time you upgrade your tank, your current credits per click rate is increased by 20%.</li>
-            <li>Even though consumables boost gold production, they do not enable it before the 50K credit threshold.
-            </li>
-            <li>Max Upgrade Tier is 10 (X).</li>
-            <li>Click on notifications to close them.</li>
-        </ul>
+        <p>Every time you upgrade your tank, your current credits per click rate is increased by 20%.</p>
+        <p>Even though consumables boost gold production, they do not enable it before the 50K credit threshold.</p>
+        <p>Max Upgrade Tier is 10 (X).</p>
+        <p>Click on notifications to close them.</p>
         <hr>
         <div class="info">
             <h4 id="version">v0.0.16</h4>
@@ -84,15 +81,16 @@
         <h1 id="store-title">Upgrades</h1>
         <div id="store">
             <div id="buyConsumable" class="store-item" onclick="Buy('Consumable')">
-                <p id="buyConsumableCost">(<span id="consumableCount">0</span>) 750</p>
+                <p>(<span id="consumableCount">0</span>) <span id="buyConsumableCost">750</span></p>
                 <span class="tooltip">Consumable - Boosts credit & gold production.</span>
             </div>
             <div id="buyCrew" class="store-item" onclick="Buy('Crew')">
-                <p id="buyCrewCost">(<span id="crewCount">0</span>) 1000</p>
+                <p>(<span id="crewCount">0</span>) <span id="buyCrewCost">1000</span></p>
                 <span class="tooltip">Crew - Boosts your credit production.</span>
             </div>
             <div id="buyEquipment" class="store-item" onclick="Buy('Equipment')">
-                <p id="buyEquipmentCost">(<span id="equipmentCount">0</span>) 1750</p>
+                <p>(<span id="equipmentCount">0</span>) <span id="buyEquipmentCost">1750</span>
+                </p>
                 <span class="tooltip">Equipment - Greatly boosts credit production.</span>
             </div>
         </div>
