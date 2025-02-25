@@ -23,8 +23,8 @@ const MAINTANK_ELEMENT = l("tank");
 
 const POPUP_CONTAINER = l("popups");
 
-const CREDIT_COUNTER = l("credit-c");
-const GOLD_COUNTER = l("gold-c");
+const CREDIT_COUNTER = "credit-c";
+const GOLD_COUNTER = "gold-c";
 
 let lastTime = 0;
 let accumulatedTime = 0;
@@ -161,8 +161,11 @@ function loadData() {
 
     if (Inventory.currentTank == null) Inventory.currentTank = currentTechTree.t1;
 
-    updateUI();
-    updateCPS();
+    appendUIBuffer("equipmentCount", Inventory.equipment);
+    appendUIBuffer("crewCount", Inventory.crew);
+    appendUIBuffer("consumableCount", Inventory.consumables);
+
+    updateCounters();
 }
 
 function romanNumeral(n) {
@@ -259,25 +262,12 @@ class Item {
                 this.func(1);
             }
         }
-
-        updateCPS();
     }
 }
 
 let Buy = function (i) {
     items[i].Buy();
 };
-
-// class PopUp {
-//     constructor(el, str) {
-//         this.el = el;
-//         this.str = str;
-//         this.life = 0;
-//         this.offx = Math.floor(Math.random() * 120 - 50);
-//         this.offy = Math.floor(Math.random() * 20 - 10);
-//         popUps.push(this);
-//     }
-// }
 
 class UserNotification {
     constructor(text, desc, color, icon, id) {
@@ -566,17 +556,13 @@ let Load = function () {
 
 function tankClick() {
     Inventory.credits += credit_rate;
-    // if (popUps.length < 260 && popUpsEnabled)
-    //     new PopUp("tank", "+" + Math.round(credit_rate));
 }
 
-function addCredits(howmany, el) {
+function addCredits(howmany) {
     Inventory.credits += howmany;
-    // if (el && popUps.length < 250 && popUpsEnabled)
-    //     new PopUp(el, "+" + howmany);
 }
 
-function addGold(howmany, el) {
+function addGold(howmany) {
     Inventory.gold += howmany;
 }
 
@@ -645,11 +631,6 @@ function upgradeTo(tank, img) {
     }
 }
 
-function updateCPS() {
-    let cps = Inventory.crew * 10 + Inventory.consumables * 5 + Inventory.equipment * 20;
-    l("credit-rate").innerHTML = "Credits/Second: " + cps;
-}
-
 function appendUIBuffer(key, value) {
     let element = document.getElementById(key);
     if (element.innerText !== value) {
@@ -665,12 +646,12 @@ function applyUIBuffer() {
     UI_UPDATE_BUFFER = {};
 }
 
-function updateUI() {
+function updateCounters() {
     creditsDisplay += (Inventory.credits - creditsDisplay) * 0.5;
-    CREDIT_COUNTER.innerHTML = Math.round(creditsDisplay);
+    appendUIBuffer(CREDIT_COUNTER, Math.round(creditsDisplay));
 
     goldDisplay += (Inventory.gold - goldDisplay) * 0.5;
-    GOLD_COUNTER.innerHTML = Math.round(goldDisplay);
+    appendUIBuffer(GOLD_COUNTER, Math.round(goldDisplay));
 }
 
 let Main = function () {
@@ -688,13 +669,13 @@ let Main = function () {
         }
 
         if (Inventory.crew && T % Math.ceil(150 / Inventory.crew) == 0)
-            addCredits(50, "crew-members");
+            addCredits(50);
         if (Inventory.consumables && T % Math.ceil(150 / Inventory.consumables) == 0)
-            addCredits(25, "consumables");
+            addCredits(25);
         if (Inventory.equipment && T % Math.ceil(150 / Inventory.equipment) == 0)
-            addCredits(100, "equipment");
+            addCredits(100);
         if (Inventory.gold_unlocked && T % Math.ceil(150 / Inventory.gold_boosters) == 0)
-            addGold(10, "gold");
+            addGold(10);
 
         if (Inventory.credits >= upgradeCost && currentTier != 10) {
             upgrade_available = true;
@@ -702,8 +683,7 @@ let Main = function () {
         }
     }
 
-    updateUI();
-
+    updateCounters();
     T++;
 };
 

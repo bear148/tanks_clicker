@@ -14,7 +14,7 @@
 <body>
     <div id="left">
         <h1>Credits: <span id="credit-c">0</span></h1>
-        <h3><span id="credit-rate">Credits/Second: 0</span></h3>
+        <!-- <h3><span id="credit-rate">Credits/Second: 0</span></h3> -->
         <h1 id="gold">Gold: <span id="gold-c">0</span></h1>
         <div id="buyGold-Booster" class="" onclick="Buy('Gold-Booster')">
             <p id="buyGold-BoosterCost">50</p>
@@ -84,15 +84,15 @@
         <h1 id="store-title">Upgrades</h1>
         <div id="store">
             <div id="buyConsumable" class="store-item" onclick="Buy('Consumable')">
-                <p id="buyConsumableCost">(0) 750</p>
+                <p id="buyConsumableCost">(<span id="consumableCount">0</span>) 750</p>
                 <span class="tooltip">Consumable - Boosts credit & gold production.</span>
             </div>
             <div id="buyCrew" class="store-item" onclick="Buy('Crew')">
-                <p id="buyCrewCost">(0) 1000</p>
+                <p id="buyCrewCost">(<span id="crewCount">0</span>) 1000</p>
                 <span class="tooltip">Crew - Boosts your credit production.</span>
             </div>
             <div id="buyEquipment" class="store-item" onclick="Buy('Equipment')">
-                <p id="buyEquipmentCost">(0) 1750</p>
+                <p id="buyEquipmentCost">(<span id="equipmentCount">0</span>) 1750</p>
                 <span class="tooltip">Equipment - Greatly boosts credit production.</span>
             </div>
         </div>
