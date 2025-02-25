@@ -26,7 +26,11 @@ const POPUP_CONTAINER = l("popups");
 const CREDIT_COUNTER = l("credit-c");
 const GOLD_COUNTER = l("gold-c");
 
-const UPGRADE_ICON = l("upgradeIcon");
+let lastTime = 0;
+let accumulatedTime = 0;
+const TIME_STEP = 1000 / 60;
+
+let UPGRADE_ICON;
 
 let countElement = document.getElementById("count");
 let currentCountry = null;
@@ -61,6 +65,7 @@ let Inventory = {
     consumables: 0,
     equipment: 0,
     goldBoosters: 1,
+    currentTank: null,
     nID: []
 }
 
@@ -122,6 +127,8 @@ let crewSkillImages = [
     "virtuoso.png",
 ];
 
+let UI_UPDATE_BUFFER = {};
+
 function randomInt(max) {
     return Math.floor(Math.random() * max);
 }
@@ -148,8 +155,11 @@ function loadData() {
         consumables: 0,
         equipment: 0,
         goldBoosters: 1,
+        currentTank: currentTechTree.t1,
         nID: []
     };
+
+    if (Inventory.currentTank == null) Inventory.currentTank = currentTechTree.t1;
 
     updateUI();
     updateCPS();
@@ -537,16 +547,19 @@ let Load = function () {
     createItems();
 
     MAINTANK_ELEMENT.innerHTML = `
-                <h2 id="tankName">${currentTechTree.t1.name}</h2>
-                <img id="tankIcon" src="${currentTechTree.t1.img}" alt="Soviet MS-1 Tank">
+                <h2 id="tankName">${Inventory.currentTank.name}</h2>
+                <img id="tankIcon" src="${Inventory.currentTank.img}" alt="Soviet MS-1 Tank">
                 <img id="tankCountry" src="${currentTechTree.flag}" alt="Soviet Flag">
                 <div id="tankStatus">
                     <img class="status-image na-s" id="upgradeIcon" src="/assets/icons/upgrade.png" onclick="upgradeTankMenu()">
                 </div>
     `;
+
     l("main-header").innerText = "Your Current Tanks";
     MAINTANK_ELEMENT.setAttribute("onmousedown", "tankClick()");
     l("current-tier").innerText = "Your current tier is: " + romanNumeral(currentTier);
+
+    UPGRADE_ICON = l("upgradeIcon");
 
     Main();
 };
@@ -637,38 +650,27 @@ function updateCPS() {
     l("credit-rate").innerHTML = "Credits/Second: " + cps;
 }
 
+function appendUIBuffer(key, value) {
+    let element = document.getElementById(key);
+    if (element.innerText !== value) {
+        UI_UPDATE_BUFFER[key] = value;
+    }
+}
+
+function applyUIBuffer() {
+    for (let key in UI_UPDATE_BUFFER) {
+        document.getElementById(key).innerText = UI_UPDATE_BUFFER[key];
+    }
+
+    UI_UPDATE_BUFFER = {};
+}
+
 function updateUI() {
     creditsDisplay += (Inventory.credits - creditsDisplay) * 0.5;
     CREDIT_COUNTER.innerHTML = Math.round(creditsDisplay);
 
     goldDisplay += (Inventory.gold - goldDisplay) * 0.5;
     GOLD_COUNTER.innerHTML = Math.round(goldDisplay);
-
-    // let str = "";
-    // for (let i in popUps) {
-    //     let rect = l(popUps[i].el).getBoundingClientRect();
-    //     let x = Math.floor((rect.left + rect.right) / 2 + popUps[i].offx) - 20;
-    //     let y =
-    //         Math.floor(
-    //             (rect.top + rect.bottom) / 2 -
-    //             Math.pow(popUps[i].life / 100, 0.5) * 100 +
-    //             popUps[i].offy
-    //         ) - 30;
-    //     let opacity = 1 - (Math.max(popUps[i].life, 80) - 80) / 20;
-    //     str +=
-    //         '<div class="pop" style="position:absolute;left:' +
-    //         x +
-    //         "px;top:" +
-    //         y +
-    //         "px;opacity:" +
-    //         opacity +
-    //         ';">' +
-    //         popUps[i].str +
-    //         "</div>";
-    //     popUps[i].life += 2;
-    //     if (popUps[i].life >= 100) popUps.splice(i, 1);
-    // }
-    // POPUP_CONTAINER.innerHTML = str;
 }
 
 let Main = function () {
@@ -703,11 +705,28 @@ let Main = function () {
     updateUI();
 
     T++;
-    setTimeout(Main, 1000 / 30);
 };
+
+function GameLoop(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+
+    let deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
+    accumulatedTime += deltaTime;
+
+    while (accumulatedTime >= TIME_STEP) {
+        Main();
+        accumulatedTime -= TIME_STEP;
+    }
+
+    applyUIBuffer();
+    requestAnimationFrame(GameLoop);
+}
 
 /* Save Game */
 addEventListener("pagehide", (event) => {
     console.log("Saving Game...");
     localStorage.setItem("playerData", JSON.stringify(Inventory));
 });
+
+requestAnimationFrame(GameLoop);
