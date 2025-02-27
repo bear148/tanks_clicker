@@ -33,6 +33,8 @@ const ENUMS = {
     PURCHASE_TYPE_GOLD: 4,
     ECONOMY_TYPE_CREDITS: 5,
     ECONOMY_TYPE_GOLD: 6,
+    TRANSACTION_TYPE_BUY: 7,
+    TRANSACTION_TYPE_SELL: 8
 }
 
 let lastTime = 0;
@@ -76,7 +78,8 @@ let Inventory = {
     currentTier: 0,
     unlocked: {
         premiumStore: false,
-        rewardStore: false
+        rewardStore: false,
+        goldProduction: false
     },
     prices: {
         conPrice: 750,
@@ -176,7 +179,8 @@ function loadData() {
         currentTier: 0,
         unlocked: {
             premiumStore: false,
-            rewardStore: false
+            rewardStore: false,
+            goldProduction: false
         },
         prices: {
             conPrice: 750,
@@ -611,7 +615,7 @@ function tankClick() {
     Inventory.credits += credit_rate;
 }
 
-function economy(a, type) {
+function economy(a, type, transactionType) {
     if (type == ENUMS.ECONOMY_TYPE_CREDITS) {
         Inventory.credits += a;
     } else if (type == ENUMS.ECONOMY_TYPE_GOLD) {
@@ -718,8 +722,8 @@ function updateCounters() {
 }
 
 let Main = function () {
-    if (Inventory.credits >= 50000 && !gold_unlocked) {
-        gold_unlocked = true;
+    if (Inventory.credits >= 50000 && !Inventory.unlocked.goldProduction) {
+        Inventory.unlocked.goldProduction = true;
     }
 
     if (!upgrading) {
@@ -735,7 +739,7 @@ let Main = function () {
             economy(25, ENUMS.ECONOMY_TYPE_CREDITS);
         if (Inventory.equipment && T % Math.ceil(150 / Inventory.equipment) == 0)
             economy(100, ENUMS.ECONOMY_TYPE_CREDITS);
-        if (Inventory.gold_unlocked && T % Math.ceil(150 / Inventory.gold_boosters) == 0)
+        if (Inventory.unlocked.goldProduction && T % Math.ceil(150 / Inventory.goldBoosters) == 0)
             economy(10, ENUMS.ECONOMY_TYPE_GOLD);
 
         if (Inventory.credits >= Inventory.prices.upgrade && Inventory.currentTier != 9) {
