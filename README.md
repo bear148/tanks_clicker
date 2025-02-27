@@ -4,15 +4,23 @@ Tanks clicker is a simple idle clicking game inspired by World of Tanks. As of r
 
 ## Changelog
 
+### *v0.0.17*
+
+- Everything now saves on your browser if the tab is closed. All of your upgrades, credits, and unlocks are saved.
+  - Only change that needs to be added is a system to rerender the upgrade images.
+- UI Updates are no handled fully using a buffer rather than happening the instant an update is needed.
+
+#### New Standard: Countries will only be added when their respective tech tree is fully completed.
+
+<details>
+<summary>Previous Patches</summary>
+<br>
+
 ### *v0.0.16*
 
 - Tier 5 premium shop sort of added. You can unlock it but it does not do anything.
 - Major code refactoring.
 - Worked more on the notifications system.
-
-<details>
-<summary>Previous Patches</summary>
-<br>
 
 ### *v0.0.15*
 

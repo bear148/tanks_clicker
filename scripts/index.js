@@ -31,6 +31,8 @@ const ENUMS = {
     UI_BUFFER_TYPE_APPEND: 2,
     PURCHASE_TYPE_CREDITS: 3,
     PURCHASE_TYPE_GOLD: 4,
+    ECONOMY_TYPE_CREDITS: 5,
+    ECONOMY_TYPE_GOLD: 6,
 }
 
 let lastTime = 0;
@@ -59,7 +61,6 @@ let notifications = [];
 
 let upgrade_available = false;
 let upgrading = false;
-let upgradeCost = 100000;
 
 let premiumStoreUnlocked = false;
 let rewardStoreUnlocked = false;
@@ -81,6 +82,7 @@ let Inventory = {
         conPrice: 750,
         crewPrice: 1000,
         eqPrice: 1750,
+        upgrade: 100000,
     },
     nID: []
 }
@@ -170,7 +172,7 @@ function loadData() {
         consumables: 0,
         equipment: 0,
         goldBoosters: 1,
-        currentTank: currentTechTree.t1,
+        currentTank: null,
         currentTier: 0,
         unlocked: {
             premiumStore: false,
@@ -180,6 +182,7 @@ function loadData() {
             conPrice: 750,
             crewPrice: 1000,
             eqPrice: 1750,
+            upgrade: 100000,
         },
         nID: []
     };
@@ -194,9 +197,9 @@ function loadData() {
     appendUIBuffer(CREWCOST_ELEMENT, Inventory.prices.crewPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
     appendUIBuffer(EQUIPMENTCOST_ELEMENT, Inventory.prices.eqPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
-    l("current-tier").innerText = "Your current tier is: " + romanNumeral(Inventory.currentTier + 1);
+    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(Inventory.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
-    if (Inventory.currentTier == 4) unlockStore();
+    if (Inventory.currentTier >= 4) unlockStore();
 
     updateCounters();
 }
@@ -477,14 +480,17 @@ function createItems() {
         "Crew",
         "A crew member to help skillfully guide your tank.",
         null,
-        1000,
+        Inventory.prices.crewPrice,
         function (buy) {
             if (buy) {
                 Inventory.crew++;
             }
 
             Inventory.prices.crewPrice = this.price;
-            document.getElementById("buyCrewCost").innerHTML = `${this.price}`;
+
+            appendUIBuffer("buyCrewCost", this.price, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+            appendUIBuffer("crewCount", Inventory.crew, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+
             CREWMEMBERS_CONTAINER.innerHTML += `<img class="crew" src="${AssetPaths[2]}${randomImage(crewSkillImages)}"></img>`;
 
             if (Inventory.crew == 100) {
@@ -519,7 +525,7 @@ function createItems() {
         "Consumable",
         "An item to boost your gold and credit production.",
         null,
-        750,
+        Inventory.prices.conPrice,
         function (buy) {
             if (buy) {
                 Inventory.consumables++;
@@ -527,7 +533,10 @@ function createItems() {
             }
 
             Inventory.prices.conPrice = this.price;
-            document.getElementById("buyConsumableCost") = `${this.price}`;
+
+            appendUIBuffer("consumableCount", Inventory.consumables, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+            appendUIBuffer("buyConsumableCost", this.price, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+
             CONSUMABLES_CONTAINER.innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
 
             if (Inventory.consumables == 100) {
@@ -549,14 +558,17 @@ function createItems() {
         "Equipment",
         "An upgrade to greatly increase credit production.",
         null,
-        1750,
+        Inventory.prices.eqPrice,
         function (buy) {
             if (buy) {
                 Inventory.equipment++;
             }
 
             Inventory.prices.eqPrice = this.price;
-            document.getElementById("buyEquipmentCost").innerHTML = `${this.price}`;
+
+            appendUIBuffer("buyEquipmentCost", this.price, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+            appendUIBuffer("equipmentCount", Inventory.equipment, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+
             EQUIPMENT_CONTAINER.innerHTML += `<img class="equipment" src="${AssetPaths[1]}${randomImage(equipmentImages)}"></img>`;
 
             if (Inventory.equipment == 100) {
@@ -588,9 +600,9 @@ let Load = function () {
                 </div>
     `;
 
-    l("main-header").innerText = "Your Current Tanks";
+    appendUIBuffer("main-header", "Your Current Tanks", ENUMS.UI_BUFFER_TYPE_NONAPPEND);
     MAINTANK_ELEMENT.setAttribute("onmousedown", "tankClick()");
-    l("current-tier").innerText = "Your current tier is: " + romanNumeral(Inventory.currentTier + 1);
+    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(Inventory.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
     UPGRADE_ICON = l("upgradeIcon");
 };
@@ -599,12 +611,12 @@ function tankClick() {
     Inventory.credits += credit_rate;
 }
 
-function addCredits(howmany) {
-    Inventory.credits += howmany;
-}
-
-function addGold(howmany) {
-    Inventory.gold += howmany;
+function economy(a, type) {
+    if (type == ENUMS.ECONOMY_TYPE_CREDITS) {
+        Inventory.credits += a;
+    } else if (type == ENUMS.ECONOMY_TYPE_GOLD) {
+        Inventory.gold += a;
+    }
 }
 
 function upgradeTankMenu() {
@@ -629,7 +641,7 @@ function upgradeTankMenu() {
 
     Inventory.currentTier++;
 
-    MAINTANK_ELEMENT.innerHTML = str;
+    appendUIBuffer("tank", str, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 }
 
 function upgradeTo(tank, img, id) {
@@ -647,13 +659,12 @@ function upgradeTo(tank, img, id) {
 
     credit_rate = credit_rate * 1.2;
 
-    Inventory.credits -= upgradeCost;
-    upgradeCost = upgradeCost >= 6100000 ? 6100000 : upgradeCost * 1.5;
+    Inventory.credits -= Inventory.prices.upgrade;
+    Inventory.prices.upgrade = Inventory.prices.upgrade >= 6100000 ? 6100000 : Inventory.prices.upgrade * 1.5;
 
     Inventory.currentTank = currentTechTree.getTanks()[Inventory.currentTier][parseInt(id)];
 
-    l("current-tier").innerText =
-        "Your current tier is: " + romanNumeral(Inventory.currentTier + 1);
+    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(Inventory.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
     MAINTANK_ELEMENT.setAttribute("onmousedown", "tankClick()");
 
     if (Inventory.currentTier == 4) {
@@ -719,15 +730,15 @@ let Main = function () {
         }
 
         if (Inventory.crew && T % Math.ceil(150 / Inventory.crew) == 0)
-            addCredits(50);
+            economy(50, ENUMS.ECONOMY_TYPE_CREDITS);
         if (Inventory.consumables && T % Math.ceil(150 / Inventory.consumables) == 0)
-            addCredits(25);
+            economy(25, ENUMS.ECONOMY_TYPE_CREDITS);
         if (Inventory.equipment && T % Math.ceil(150 / Inventory.equipment) == 0)
-            addCredits(100);
+            economy(100, ENUMS.ECONOMY_TYPE_CREDITS);
         if (Inventory.gold_unlocked && T % Math.ceil(150 / Inventory.gold_boosters) == 0)
-            addGold(10);
+            economy(10, ENUMS.ECONOMY_TYPE_GOLD);
 
-        if (Inventory.credits >= upgradeCost && Inventory.currentTier != 9) {
+        if (Inventory.credits >= Inventory.prices.upgrade && Inventory.currentTier != 9) {
             upgrade_available = true;
             l("upgradeIcon").classList.remove("na-s");
         }
