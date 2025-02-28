@@ -69,7 +69,7 @@ let upgrading = false;
 let premiumStoreUnlocked = false;
 let rewardStoreUnlocked = false;
 
-let Inventory = {
+let gameData = {
     credits: 0,
     gold: 0,
     crew: 0,
@@ -170,7 +170,7 @@ function randomImage(imageArray) {
 }
 
 function loadData() {
-    Inventory = JSON.parse(localStorage.getItem("playerData")) || {
+    gameData = JSON.parse(localStorage.getItem("playerData")) || {
         credits: 0,
         gold: 0,
         crew: 0,
@@ -193,19 +193,19 @@ function loadData() {
         nID: []
     };
 
-    if (Inventory.currentTank == null) Inventory.currentTank = currentTechTree.t1;
+    if (gameData.currentTank == null) gameData.currentTank = currentTechTree.t1;
 
-    appendUIBuffer("equipmentCount", Inventory.equipment, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
-    appendUIBuffer("crewCount", Inventory.crew, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
-    appendUIBuffer("consumableCount", Inventory.consumables, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer("equipmentCount", gameData.equipment, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer("crewCount", gameData.crew, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer("consumableCount", gameData.consumables, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
-    appendUIBuffer(CONSUMABLECOST_ELEMENT, Inventory.prices.conPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
-    appendUIBuffer(CREWCOST_ELEMENT, Inventory.prices.crewPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
-    appendUIBuffer(EQUIPMENTCOST_ELEMENT, Inventory.prices.eqPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer(CONSUMABLECOST_ELEMENT, gameData.prices.conPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer(CREWCOST_ELEMENT, gameData.prices.crewPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer(EQUIPMENTCOST_ELEMENT, gameData.prices.eqPrice, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
-    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(Inventory.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(gameData.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
-    if (Inventory.currentTier >= 4) unlockStore();
+    if (gameData.currentTier >= 4) unlockStore();
 
     updateCounters();
 }
@@ -292,13 +292,13 @@ class Item {
 
     Buy() {
         if (this.c == ENUMS.PURCHASE_TYPE_CREDITS) {
-            if (Inventory.credits >= this.price) {
+            if (gameData.credits >= this.price) {
                 economy(this.price, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.PURCHASE_TYPE_CREDITS);
                 this.price = Math.ceil(this.price * 1.02);
                 this.func(1);
             }
         } else if (this.c == ENUMS.PURCHASE_TYPE_GOLD) {
-            if (Inventory.gold >= this.price) {
+            if (gameData.gold >= this.price) {
                 economy(this.price, ENUMS.ECONOMY_TYPE_GOLD, ENUMS.PURCHASE_TYPE_GOLD);
                 this.price = Math.ceil(this.price * 1.06);
                 this.func(1);
@@ -332,7 +332,7 @@ class UserNotification {
         }
 
         notifications.push(this);
-        Inventory.nID.push(this.id);
+        gameData.nID.push(this.id);
         appendUIBuffer(this.notifel,
             `
 		<div class="notification" onmousedown="closeNote(this)">
@@ -486,21 +486,21 @@ function createItems() {
         "Crew",
         "A crew member to help skillfully guide your tank.",
         null,
-        Inventory.prices.crewPrice,
+        gameData.prices.crewPrice,
         function (buy) {
             if (buy) {
-                Inventory.crew++;
+                gameData.crew++;
             }
 
-            Inventory.prices.crewPrice = this.price;
+            gameData.prices.crewPrice = this.price;
 
             appendUIBuffer("buyCrewCost", this.price, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
-            appendUIBuffer("crewCount", Inventory.crew, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+            appendUIBuffer("crewCount", gameData.crew, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
             CREWMEMBERS_CONTAINER.innerHTML += `<img class="crew" src="${AssetPaths[2]}${randomImage(crewSkillImages)}"></img>`;
 
-            if (Inventory.crew == 100) {
-                if (!Inventory.nID.includes(3)) {
+            if (gameData.crew == 100) {
+                if (!gameData.nID.includes(3)) {
                     new UserNotification(
                         "100 Crew Purchased!",
                         "You've got a lot of crew members now...",
@@ -520,7 +520,7 @@ function createItems() {
         null,
         50,
         function (buy) {
-            if (buy) Inventory.goldBoosters++;
+            if (buy) gameData.goldBoosters++;
             GOLDBOOSTERSCOST_ELEMENT.innerHTML = this.price;
             GOLDBOOSTERS_CONTAINER.innerHTML += '<div class="gold-boost"></div>';
         },
@@ -531,22 +531,22 @@ function createItems() {
         "Consumable",
         "An item to boost your gold and credit production.",
         null,
-        Inventory.prices.conPrice,
+        gameData.prices.conPrice,
         function (buy) {
             if (buy) {
-                Inventory.consumables++;
-                Inventory.goldBoosters += 0.2;
+                gameData.consumables++;
+                gameData.goldBoosters += 0.2;
             }
 
-            Inventory.prices.conPrice = this.price;
+            gameData.prices.conPrice = this.price;
 
-            appendUIBuffer("consumableCount", Inventory.consumables, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+            appendUIBuffer("consumableCount", gameData.consumables, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
             appendUIBuffer("buyConsumableCost", this.price, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
             CONSUMABLES_CONTAINER.innerHTML += '<img class="consumable" src="/assets/items/cola.png"></img>';
 
-            if (Inventory.consumables == 100) {
-                if (!Inventory.nID.includes(4)) {
+            if (gameData.consumables == 100) {
+                if (!gameData.nID.includes(4)) {
                     new UserNotification(
                         "100 Consumables Purchased!",
                         "You've got a lot of consumables now...",
@@ -564,21 +564,21 @@ function createItems() {
         "Equipment",
         "An upgrade to greatly increase credit production.",
         null,
-        Inventory.prices.eqPrice,
+        gameData.prices.eqPrice,
         function (buy) {
             if (buy) {
-                Inventory.equipment++;
+                gameData.equipment++;
             }
 
-            Inventory.prices.eqPrice = this.price;
+            gameData.prices.eqPrice = this.price;
 
             appendUIBuffer("buyEquipmentCost", this.price, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
-            appendUIBuffer("equipmentCount", Inventory.equipment, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+            appendUIBuffer("equipmentCount", gameData.equipment, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
             EQUIPMENT_CONTAINER.innerHTML += `<img class="equipment" src="${AssetPaths[1]}${randomImage(equipmentImages)}"></img>`;
 
-            if (Inventory.equipment == 100) {
-                if (!Inventory.nID.includes(2)) {
+            if (gameData.equipment == 100) {
+                if (!gameData.nID.includes(2)) {
                     new UserNotification(
                         "100 Equipment Purchased!",
                         "You've got a lot of equipment now...",
@@ -598,8 +598,8 @@ let Load = function () {
     createItems();
 
     MAINTANK_ELEMENT.innerHTML = `
-                <h2 id="tankName">${Inventory.currentTank.name}</h2>
-                <img id="tankIcon" src="${Inventory.currentTank.img}" alt="Soviet MS-1 Tank">
+                <h2 id="tankName">${gameData.currentTank.name}</h2>
+                <img id="tankIcon" src="${gameData.currentTank.img}" alt="Soviet MS-1 Tank">
                 <img id="tankCountry" src="${currentTechTree.flag}" alt="Soviet Flag">
                 <div id="tankStatus">
                     <img class="status-image na-s" id="upgradeIcon" src="/assets/icons/upgrade.png" onclick="upgradeTankMenu()">
@@ -608,7 +608,7 @@ let Load = function () {
 
     appendUIBuffer("main-header", "Your Current Tanks", ENUMS.UI_BUFFER_TYPE_NONAPPEND);
     MAINTANK_ELEMENT.setAttribute("onmousedown", "tankClick()");
-    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(Inventory.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(gameData.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
     UPGRADE_ICON = l("upgradeIcon");
 };
@@ -620,19 +620,19 @@ function tankClick() {
 function economy(a, type, transactionType) {
     if (type == ENUMS.ECONOMY_TYPE_CREDITS) {
         if (transactionType == ENUMS.PURCHASE_TYPE_CREDITS) {
-            Inventory.credits -= a;
+            gameData.credits -= a;
         } else if (transactionType == ENUMS.TRANSACTION_GAME_CREDITS_GIVE) {
-            Inventory.credits += a;
+            gameData.credits += a;
         }
     } else if (type == ENUMS.ECONOMY_TYPE_GOLD) {
         if (transactionType == ENUMS.PURCHASE_TYPE_GOLD) {
-            Inventory.gold -= a;
+            gameData.gold -= a;
         } else if (transactionType == ENUMS.TRANSACTION_GAME_GOLD_GIVE) {
-            Inventory.gold += a;
+            gameData.gold += a;
         }
     }
 
-    if (Inventory.prices.upgrade > Inventory.credits) {
+    if (gameData.prices.upgrade > gameData.credits) {
         upgrade_available = false;
         l("upgradeIcon").classList.add("na-s");
     }
@@ -648,7 +648,7 @@ function upgradeTankMenu() {
 
     MAINTANK_ELEMENT.setAttribute("onmousedown", "");
 
-    for (let t of currentTechTree.getTanks()[Inventory.currentTier + 1]) {
+    for (let t of currentTechTree.getTanks()[gameData.currentTier + 1]) {
         str += `
         <figure>
             <img class="upgradeTankIcon" src="${t.img}" onclick="upgradeTo('${t.name}', '${t.img}', '${id}')" alt="Soviet MS-1 Tank">
@@ -658,7 +658,7 @@ function upgradeTankMenu() {
         id++;
     }
 
-    Inventory.currentTier++;
+    gameData.currentTier++;
 
     appendUIBuffer("tank", str, ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 }
@@ -678,15 +678,15 @@ function upgradeTo(tank, img, id) {
 
     credit_rate = credit_rate * 1.2;
 
-    Inventory.credits -= Inventory.prices.upgrade;
-    Inventory.prices.upgrade = Inventory.prices.upgrade >= 6100000 ? 6100000 : Inventory.prices.upgrade * 1.5;
+    gameData.credits -= gameData.prices.upgrade;
+    gameData.prices.upgrade = gameData.prices.upgrade >= 6100000 ? 6100000 : gameData.prices.upgrade * 1.5;
 
-    Inventory.currentTank = currentTechTree.getTanks()[Inventory.currentTier][parseInt(id)];
+    gameData.currentTank = currentTechTree.getTanks()[gameData.currentTier][parseInt(id)];
 
-    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(Inventory.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
+    appendUIBuffer("current-tier", "Your current tier is: " + romanNumeral(gameData.currentTier + 1), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
     MAINTANK_ELEMENT.setAttribute("onmousedown", "tankClick()");
 
-    if (Inventory.currentTier == 4) {
+    if (gameData.currentTier == 4) {
         console.log("Premium Store unlocked.");
         unlockStore();
         new UserNotification(
@@ -697,7 +697,7 @@ function upgradeTo(tank, img, id) {
             5
         ).run();
 
-        Inventory.unlocked.premiumStore = true;
+        gameData.unlocked.premiumStore = true;
     }
 }
 
@@ -729,35 +729,35 @@ function applyUIBuffer() {
 }
 
 function updateCounters() {
-    creditsDisplay += (Inventory.credits - creditsDisplay) * 0.5;
+    creditsDisplay += (gameData.credits - creditsDisplay) * 0.5;
     appendUIBuffer(CREDIT_COUNTER, Math.round(creditsDisplay), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 
-    goldDisplay += (Inventory.gold - goldDisplay) * 0.5;
+    goldDisplay += (gameData.gold - goldDisplay) * 0.5;
     appendUIBuffer(GOLD_COUNTER, Math.round(goldDisplay), ENUMS.UI_BUFFER_TYPE_NONAPPEND);
 }
 
 let Main = function () {
-    if (Inventory.credits >= 50000 && !Inventory.unlocked.goldProduction) {
-        Inventory.unlocked.goldProduction = true;
+    if (gameData.credits >= 50000 && !gameData.unlocked.goldProduction) {
+        gameData.unlocked.goldProduction = true;
     }
 
     if (!upgrading) {
         for (let i in items) {
-            if ((Inventory.credits >= items[i].price && items[i].c == ENUMS.PURCHASE_TYPE_CREDITS) || (Inventory.gold >= items[i].price && items[i].c == ENUMS.PURCHASE_TYPE_GOLD))
+            if ((gameData.credits >= items[i].price && items[i].c == ENUMS.PURCHASE_TYPE_CREDITS) || (gameData.gold >= items[i].price && items[i].c == ENUMS.PURCHASE_TYPE_GOLD))
                 l("buy" + items[i].name + "Cost").className = "";
             else l("buy" + items[i].name + "Cost").className = "na";
         }
 
-        if (Inventory.crew && T % Math.ceil(150 / Inventory.crew) == 0)
+        if (gameData.crew && T % Math.ceil(150 / gameData.crew) == 0)
             economy(50, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.TRANSACTION_GAME_CREDITS_GIVE);
-        if (Inventory.consumables && T % Math.ceil(150 / Inventory.consumables) == 0)
+        if (gameData.consumables && T % Math.ceil(150 / gameData.consumables) == 0)
             economy(25, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.TRANSACTION_GAME_CREDITS_GIVE);
-        if (Inventory.equipment && T % Math.ceil(150 / Inventory.equipment) == 0)
+        if (gameData.equipment && T % Math.ceil(150 / gameData.equipment) == 0)
             economy(100, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.TRANSACTION_GAME_CREDITS_GIVE);
-        if (Inventory.unlocked.goldProduction && T % Math.ceil(150 / Inventory.goldBoosters) == 0)
+        if (gameData.unlocked.goldProduction && T % Math.ceil(150 / gameData.goldBoosters) == 0)
             economy(10, ENUMS.ECONOMY_TYPE_GOLD, ENUMS.TRANSACTION_GAME_GOLD_GIVE);
 
-        if (Inventory.credits >= Inventory.prices.upgrade && Inventory.currentTier != 9) {
+        if (gameData.credits >= gameData.prices.upgrade && gameData.currentTier != 9) {
             upgrade_available = true;
             l("upgradeIcon").classList.remove("na-s");
         }
@@ -786,7 +786,7 @@ function GameLoop(timestamp) {
 /* Save Game */
 addEventListener("pagehide", (event) => {
     console.log("Saving Game...");
-    localStorage.setItem("playerData", JSON.stringify(Inventory));
+    localStorage.setItem("playerData", JSON.stringify(gameData));
 });
 
 requestAnimationFrame(GameLoop);
