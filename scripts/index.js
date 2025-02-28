@@ -34,7 +34,9 @@ const ENUMS = {
     ECONOMY_TYPE_CREDITS: 5,
     ECONOMY_TYPE_GOLD: 6,
     TRANSACTION_TYPE_BUY: 7,
-    TRANSACTION_TYPE_SELL: 8
+    TRANSACTION_TYPE_SELL: 8,
+    TRANSACTION_GAME_CREDITS_GIVE: 9,
+    TRANSACTION_GAME_GOLD_GIVE: 10
 }
 
 let lastTime = 0;
@@ -291,13 +293,13 @@ class Item {
     Buy() {
         if (this.c == ENUMS.PURCHASE_TYPE_CREDITS) {
             if (Inventory.credits >= this.price) {
-                Inventory.credits -= this.price;
+                economy(this.price, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.PURCHASE_TYPE_CREDITS);
                 this.price = Math.ceil(this.price * 1.02);
                 this.func(1);
             }
         } else if (this.c == ENUMS.PURCHASE_TYPE_GOLD) {
             if (Inventory.gold >= this.price) {
-                Inventory.gold -= this.price;
+                economy(this.price, ENUMS.ECONOMY_TYPE_GOLD, ENUMS.PURCHASE_TYPE_GOLD);
                 this.price = Math.ceil(this.price * 1.06);
                 this.func(1);
             }
@@ -612,14 +614,27 @@ let Load = function () {
 };
 
 function tankClick() {
-    Inventory.credits += credit_rate;
+    economy(credit_rate, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.TRANSACTION_GAME_CREDITS_GIVE);
 }
 
 function economy(a, type, transactionType) {
     if (type == ENUMS.ECONOMY_TYPE_CREDITS) {
-        Inventory.credits += a;
+        if (transactionType == ENUMS.PURCHASE_TYPE_CREDITS) {
+            Inventory.credits -= a;
+        } else if (transactionType == ENUMS.TRANSACTION_GAME_CREDITS_GIVE) {
+            Inventory.credits += a;
+        }
     } else if (type == ENUMS.ECONOMY_TYPE_GOLD) {
-        Inventory.gold += a;
+        if (transactionType == ENUMS.PURCHASE_TYPE_GOLD) {
+            Inventory.gold -= a;
+        } else if (transactionType == ENUMS.TRANSACTION_GAME_GOLD_GIVE) {
+            Inventory.gold += a;
+        }
+    }
+
+    if (Inventory.prices.upgrade > Inventory.credits) {
+        upgrade_available = false;
+        l("upgradeIcon").classList.add("na-s");
     }
 }
 
@@ -734,13 +749,13 @@ let Main = function () {
         }
 
         if (Inventory.crew && T % Math.ceil(150 / Inventory.crew) == 0)
-            economy(50, ENUMS.ECONOMY_TYPE_CREDITS);
+            economy(50, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.TRANSACTION_GAME_CREDITS_GIVE);
         if (Inventory.consumables && T % Math.ceil(150 / Inventory.consumables) == 0)
-            economy(25, ENUMS.ECONOMY_TYPE_CREDITS);
+            economy(25, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.TRANSACTION_GAME_CREDITS_GIVE);
         if (Inventory.equipment && T % Math.ceil(150 / Inventory.equipment) == 0)
-            economy(100, ENUMS.ECONOMY_TYPE_CREDITS);
+            economy(100, ENUMS.ECONOMY_TYPE_CREDITS, ENUMS.TRANSACTION_GAME_CREDITS_GIVE);
         if (Inventory.unlocked.goldProduction && T % Math.ceil(150 / Inventory.goldBoosters) == 0)
-            economy(10, ENUMS.ECONOMY_TYPE_GOLD);
+            economy(10, ENUMS.ECONOMY_TYPE_GOLD, ENUMS.TRANSACTION_GAME_GOLD_GIVE);
 
         if (Inventory.credits >= Inventory.prices.upgrade && Inventory.currentTier != 9) {
             upgrade_available = true;
